@@ -9,7 +9,7 @@ on:
 
 engine:
   id: claude
-  model: claude-haiku-4-5
+  model: haiku
 
 permissions:
   contents: read
@@ -103,7 +103,7 @@ For each issue selected for stale labeling:
    - Mention that the issue will be automatically closed in 1 minute if there is no further activity
    - Be written in first person ("I") as the bot
    - Be concise — no more than a few short paragraphs
-   - End with a short footer: "— [dosu-stale-bot](https://github.com/dosu-ai/stale-bot-action)"
+   - End with a short footer: "— dosu-stale-bot"
 
 5. **Apply the stale label and post the comment**: Use the `add-comment` safe output to post
    the generated comment, then use `add-labels` to apply the `Stale` label.
