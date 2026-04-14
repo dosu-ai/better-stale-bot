@@ -7,6 +7,8 @@ description: >
 on:
   schedule: daily on weekdays
 
+engine: claude
+
 permissions:
   contents: read
   issues: read
