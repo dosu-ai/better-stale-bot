@@ -156,7 +156,7 @@ engine: claude
 engine: codex
 ```
 
-After changing engine config, recompile: `gh aw compile dosu-stale-bot` and push to remote before running the workflow
+After changing engine config, recompile: `gh aw compile dosu-stale-bot` and push to remote before running the workflow. Ensure you have the correct repository secret for the chosen engine.
 
 ## Cost
 
