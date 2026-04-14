@@ -15,7 +15,7 @@ permissions:
 
 tools:
   github:
-    toolsets: [default]
+    toolsets: [issues]
   cache-memory: true
 
 safe-outputs:
@@ -29,7 +29,6 @@ safe-outputs:
     allowed: ["Stale"]
   close-issue:
     max: 25
-    state-reason: not_planned
   noop:
 ---
 
