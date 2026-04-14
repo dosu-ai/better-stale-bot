@@ -13,7 +13,7 @@ Unlike traditional stale bots that blindly close issues after a timeout, dosu-st
 - Posts a helpful, context-aware stale comment
 - Closes stale-labeled issues after a 7-day grace period (configurable)
 - Removes the stale label if someone comments, giving the issue a second chance
-- Respects exempt labels (`pinned`, `security`, `help wanted`)
+- Respects exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted`)
 
 ## Installation
 
@@ -38,11 +38,11 @@ gh extension install github/gh-aw
 
 Go to your repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
 
-| Engine | Secret name | Get your key |
-|--------|-------------|-------------|
-| Copilot (default) | `COPILOT_GITHUB_TOKEN` | [Auth setup](https://github.github.com/gh-aw/reference/auth/#copilot_github_token) |
-| Claude | `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com) |
-| Codex | `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com/api-keys) |
+| Engine             | Secret name            | Get your key                                                                        |
+| ------------------ | ---------------------- | ----------------------------------------------------------------------------------- |
+| Copilot (default)  | `COPILOT_GITHUB_TOKEN` | [Auth setup](https://github.github.com/gh-aw/reference/auth/#copilot_github_token) |
+| Claude             | `ANTHROPIC_API_KEY`    | [console.anthropic.com](https://console.anthropic.com)                              |
+| Codex              | `OPENAI_API_KEY`       | [platform.openai.com](https://platform.openai.com/api-keys)                        |
 
 ### Step 3: Add the workflow
 
@@ -136,7 +136,7 @@ Edit the `engine` field in the frontmatter (requires recompilation):
 engine: copilot
 ```
 
-**Claude (recommended: Haiku for cost efficiency):**
+**Claude with Haiku (recommended for cost efficiency):**
 
 ```yaml
 engine:
@@ -144,7 +144,7 @@ engine:
   model: haiku
 ```
 
-**Claude with Sonnet (default sonnet: higher quality, higher cost):**
+**Claude with Sonnet (higher quality, higher cost):**
 
 ```yaml
 engine: claude
@@ -156,16 +156,25 @@ engine: claude
 engine: codex
 ```
 
-After changing engine config, recompile: `gh aw compile dosu-stale-bot` and push to remote before running the workflow. Ensure you have the correct repository secret for the chosen engine.
+After changing engine config, recompile with `gh aw compile dosu-stale-bot` and push to remote before running the workflow. Ensure you have the correct repository secret for the chosen engine.
 
 ## Cost
 
-Cost depends on engine, model, and number of issues processed. Baseline for processing 5 issues:
+Cost depends on engine, model, and number of issues processed. All costs are per workflow run.
 
-| Engine + Model | Cost | Duration |
-|---------------|------|----------|
-| Claude Haiku 4.5 | ~$0.10 | ~4 min |
-| Claude Sonnet 4.6 | ~$0.24 | ~4 min |
+| Engine + Model    | Issues | Cost   | Agent Duration | Workflow Duration |
+| ----------------- | ------ | ------ | -------------- | ----------------- |
+| Claude Haiku 4.5  | 5      | ~$0.10 | ~2 min         | ~4 min            |
+| Claude Haiku 4.5  | 25     | ~$0.43 | ~4 min         | ~6 min            |
+| Claude Sonnet 4.6 | 5      | ~$0.24 | ~2 min         | ~4 min            |
+
+**Average cost per issue with Haiku: ~$0.02.** A daily run processing 25 issues would cost roughly $0.43/day or ~$13/month.
+
+## Tips
+
+- **Protect system issues from stale labeling** — the default prompt exempts issues with the `agentic-workflows` label (auto-applied by GitHub Agentic Workflows to noop tracking issues). If your repo has other auto-generated or meta issues you want to protect, add their labels to the exempt list in the markdown body, or apply one of the existing exempt labels (`pinned`, `security`, `help wanted`).
+- **The 25-issue limit is per run, not per day** — if you manually trigger the workflow multiple times in a day, each run can process up to 25 issues independently.
+- **Closures are prioritized over new stale labels** — issues already marked stale that have exceeded the 7-day grace period are closed first. Remaining budget is used to label new stale issues.
 
 ## Additional Resources
 
