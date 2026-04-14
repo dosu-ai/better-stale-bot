@@ -103,7 +103,7 @@ For each issue selected for stale labeling:
    - Mention that the issue will be automatically closed in 7 days if there is no further activity
    - Be written in first person ("I") as the bot
    - Be concise — no more than a few short paragraphs
-   - End with a short footer: "— dosu-stale-bot"
+   - End with a short footer: "— better-stale-bot"
 
 5. **Apply the stale label and post the comment**: Use the `add-comment` safe output to post
    the generated comment, then use `add-labels` to apply the `Stale` label.

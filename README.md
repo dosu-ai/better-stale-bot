@@ -1,8 +1,8 @@
-# dosu-stale-bot
+# better-stale-bot
 
-An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). This is the open-source version of [Dosu's](https://dosu.dev) internal GitHub stale bot.
+An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). On each run it finds inactive issues, summarizes the thread, applies a `Stale` label with a tailored comment, closes issues after a grace period when they stay quiet, and removes the label when someone participates again—all according to thresholds and exempt labels you set in the workflow.
 
-Unlike traditional stale bots that blindly close issues after a timeout, dosu-stale-bot uses AI to summarize each issue, determine whether it appears resolved, and post a contextual comment before applying the stale label.
+Rules-based stale bots often use fixed timers and canned messages. Here the model reads each issue end to end, reasons about whether the thread still looks actionable, and drafts a short comment that reflects that state—so maintainers and readers get context, not just a countdown.
 
 **What it does:**
 
@@ -46,32 +46,32 @@ Go to your repo → **Settings** → **Secrets and variables** → **Actions** �
 
 ### Step 3: Add the workflow
 
-Copy the `dosu-stale-bot.md` file from this repo into your repository:
+Copy the `better-stale-bot.md` file from this repo into your repository:
 
 ```bash
 mkdir -p .github/workflows
-curl -o .github/workflows/dosu-stale-bot.md \
-  https://raw.githubusercontent.com/dosu-ai/dosu-stale-bot/main/.github/workflows/dosu-stale-bot.md
+curl -o .github/workflows/better-stale-bot.md \
+  https://raw.githubusercontent.com/dosu-ai/better-stale-bot/main/.github/workflows/better-stale-bot.md
 ```
 
 Compile the workflow to generate the lock file:
 
 ```bash
-gh aw compile dosu-stale-bot
+gh aw compile better-stale-bot
 ```
 
 Commit and push both files:
 
 ```bash
-git add .github/workflows/dosu-stale-bot.md .github/workflows/dosu-stale-bot.lock.yml
-git commit -m "Add dosu-stale-bot workflow"
+git add .github/workflows/better-stale-bot.md .github/workflows/better-stale-bot.lock.yml
+git commit -m "Add better-stale-bot workflow"
 git push
 ```
 
 ### Step 4: Trigger a run
 
 ```bash
-gh aw run dosu-stale-bot
+gh aw run better-stale-bot
 ```
 
 Or go to the **Actions** tab in your repo and manually trigger the workflow.
@@ -84,7 +84,7 @@ If you want a different workflow name (e.g., `issue-cleanup`):
 
 1. Rename the file:
    ```bash
-   mv .github/workflows/dosu-stale-bot.md .github/workflows/issue-cleanup.md
+   mv .github/workflows/better-stale-bot.md .github/workflows/issue-cleanup.md
    ```
 
 2. Recompile:
@@ -93,13 +93,13 @@ If you want a different workflow name (e.g., `issue-cleanup`):
    ```
 
 3. Commit both the renamed `.md` and new `.lock.yml`
-4. Delete the old `dosu-stale-bot.lock.yml` if it wasn't automatically removed
+4. Delete the old `better-stale-bot.lock.yml` if it wasn't automatically removed
 
 ### Adjusting the prompt manually
 
-Open `.github/workflows/dosu-stale-bot.md` in any editor. The file has two parts:
+Open `.github/workflows/better-stale-bot.md` in any editor. The file has two parts:
 
-- **Frontmatter** (between `---` markers) — configuration: triggers, permissions, engine, safe outputs. Changes here **require recompilation** with `gh aw compile dosu-stale-bot`.
+- **Frontmatter** (between `---` markers) — configuration: triggers, permissions, engine, safe outputs. Changes here **require recompilation** with `gh aw compile better-stale-bot`.
 - **Markdown body** (everything after the frontmatter) — the AI agent's instructions. **You can edit this freely without recompilation.** Changes take effect on the next run.
 
 Common customizations in the markdown body:
@@ -108,14 +108,14 @@ Common customizations in the markdown body:
 - **Exempt labels** — edit the list of labels that should never be marked stale
 - **Comment tone** — adjust the stale comment guidelines to match your project's voice
 - **Max issues per run** — change the limit (default 25)
-- **Footer** — customize or remove the `— dosu-stale-bot` signature
+- **Footer** — customize or remove the `— better-stale-bot` signature
 
 ### Adjusting the prompt with an AI agent
 
 Instead of editing manually, use a coding agent (Copilot, Claude Code, Cursor, etc.) to customize the workflow. Run this prompt from your repository:
 
 ```
-Update the stale bot workflow at .github/workflows/dosu-stale-bot.md using
+Update the stale bot workflow at .github/workflows/better-stale-bot.md using
 https://raw.githubusercontent.com/github/gh-aw/main/create.md
 
 I want to change:
@@ -156,7 +156,7 @@ engine: claude
 engine: codex
 ```
 
-After changing engine config, recompile with `gh aw compile dosu-stale-bot` and push to remote before running the workflow. Ensure you have the correct repository secret for the chosen engine.
+After changing engine config, recompile with `gh aw compile better-stale-bot` and push to remote before running the workflow. Ensure you have the correct repository secret for the chosen engine.
 
 ## Cost
 
