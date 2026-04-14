@@ -44,7 +44,7 @@ them if they've already been stale long enough.
 
 - **Minutes before stale**: 2 minutes of inactivity before marking an issue as stale
 - **Minutes before close**: 1 minute after the stale label is applied before closing
-- **Max issues per run**: 25 issues processed per run
+- **Max issues per run**: Never process more than 25 issues total per run — this includes both adding comments and adding labels.
 - **Stale label**: `Stale`
 - **Exempt labels**: Issues with the labels `pinned`, `security`, or `help wanted` should never be marked stale
 
