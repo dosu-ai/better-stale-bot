@@ -42,8 +42,8 @@ them if they've already been stale long enough.
 
 ## Configuration
 
-- **Minutes before stale**: 1 minute of inactivity before marking an issue as stale
-- **Minutes before close**: 1 minute after the stale label is applied before closing
+- **Days before stale**: 90 days of inactivity before marking an issue as stale
+- **Days before close**: 7 days after the stale label is applied before closing
 - **Max issues per run**: 25 issues processed per run
 - **Stale label**: `Stale`
 - **Exempt labels**: Issues with the labels `pinned`, `security`, or `help wanted` should never be marked stale
@@ -54,7 +54,7 @@ Use the GitHub tools to fetch all open issues in this repository. Split them int
 
 ### Bucket A — Already-stale issues (for potential closure)
 Issues that already have the `Stale` label applied. Check the label's `created_at` or the
-most recent bot comment that applied the stale label. If it has been **more than 1 minute**
+most recent bot comment that applied the stale label. If it has been **more than 7 days**
 since the stale label was applied AND no non-bot user has commented since, these issues
 should be closed.
 
@@ -63,7 +63,7 @@ instead — the issue is no longer stale.
 
 ### Bucket B — Potentially stale issues (for labeling)
 Issues WITHOUT the `Stale` label where the most recent activity (comment, edit, or label change)
-is **older than 1 minute**. Exclude issues with exempt labels (`pinned`, `security`, `help wanted`).
+is **older than 90 days**. Exclude issues with exempt labels (`pinned`, `security`, `help wanted`).
 
 ## Step 2: Rank Potentially Stale Issues (Bucket B)
 
@@ -100,7 +100,7 @@ For each issue selected for stale labeling:
    - If UNRESOLVED: acknowledge it hasn't been resolved yet
    - Explain that the issue is being marked as stale due to inactivity
    - Invite the author or community to comment if the issue is still relevant
-   - Mention that the issue will be automatically closed in 1 minute if there is no further activity
+   - Mention that the issue will be automatically closed in 7 days if there is no further activity
    - Be written in first person ("I") as the bot
    - Be concise — no more than a few short paragraphs
    - End with a short footer: "— dosu-stale-bot"
@@ -110,7 +110,7 @@ For each issue selected for stale labeling:
 
 ## Step 4: Close Expired Stale Issues (Bucket A)
 
-For each already-stale issue that has exceeded the 1-minute grace period with no non-bot activity:
+For each already-stale issue that has exceeded the 7-day grace period with no non-bot activity:
 - Use `close-issue` to close it with state reason `not_planned`
 
 For each already-stale issue where a non-bot user has commented since the stale label:
