@@ -57,13 +57,13 @@ curl -o .github/workflows/dosu-stale-bot.md \
 Compile the workflow to generate the lock file:
 
 ```bash
-gh aw compile stale-bot
+gh aw compile dosu-stale-bot
 ```
 
 Commit and push both files:
 
 ```bash
-git add .github/workflows/dosu-stale-bot.md .github/workflows/stale-bot.lock.yml
+git add .github/workflows/dosu-stale-bot.md .github/workflows/dosu-stale-bot.lock.yml
 git commit -m "Add dosu-stale-bot workflow"
 git push
 ```
@@ -71,7 +71,7 @@ git push
 ### Step 4: Trigger a run
 
 ```bash
-gh aw run stale-bot
+gh aw run dosu-stale-bot
 ```
 
 Or go to the **Actions** tab in your repo and manually trigger the workflow.
@@ -93,13 +93,13 @@ If you want a different workflow name (e.g., `issue-cleanup`):
    ```
 
 3. Commit both the renamed `.md` and new `.lock.yml`
-4. Delete the old `stale-bot.lock.yml` if it wasn't automatically removed
+4. Delete the old `dosu-stale-bot.lock.yml` if it wasn't automatically removed
 
 ### Adjusting the prompt manually
 
 Open `.github/workflows/dosu-stale-bot.md` in any editor. The file has two parts:
 
-- **Frontmatter** (between `---` markers) — configuration: triggers, permissions, engine, safe outputs. Changes here **require recompilation** with `gh aw compile stale-bot`.
+- **Frontmatter** (between `---` markers) — configuration: triggers, permissions, engine, safe outputs. Changes here **require recompilation** with `gh aw compile dosu-stale-bot`.
 - **Markdown body** (everything after the frontmatter) — the AI agent's instructions. **You can edit this freely without recompilation.** Changes take effect on the next run.
 
 Common customizations in the markdown body:
@@ -156,7 +156,7 @@ engine: claude
 engine: codex
 ```
 
-After changing engine config, recompile: `gh aw compile stale-bot` and push to remote before running the workflow
+After changing engine config, recompile: `gh aw compile dosu-stale-bot` and push to remote before running the workflow
 
 ## Cost
 
