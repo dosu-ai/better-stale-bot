@@ -5,8 +5,8 @@ description: >
   grace period if no activity occurs.
 
 on:
-  schedule: daily on weekdays
-
+  schedule: daily
+  
 engine:
   id: claude
   model: haiku
