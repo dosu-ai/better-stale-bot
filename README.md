@@ -21,7 +21,7 @@ Rules-based stale bots often use fixed timers and canned messages. Here the mode
 
 - **AI engine account** — one of:
   - [GitHub Copilot](https://github.com/features/copilot) (GitHub Agentic-Workflows default engine)
-  - [Anthropic Claude](https://www.anthropic.com/) (this workflow’s frontmatter defaults to **Haiku** for cost efficiency; change in frontmatter if you prefer another model)
+  - [Anthropic Claude](https://www.anthropic.com/)
   - [OpenAI Codex](https://openai.com/api/)
 - **GitHub repository** with write access and [Actions enabled](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)
 - **GitHub CLI** v2.0.0+ — [install here](https://cli.github.com/). Check version: `gh --version`
