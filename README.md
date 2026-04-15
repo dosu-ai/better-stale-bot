@@ -2,7 +2,7 @@
 
 An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). It summarizes inactive issues, applies a `Stale` label, posts a tailored comment, closes them after a quiet period, and removes `Stale` when a **non-bot** user engages again. 
 
-Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md` (`days-before-stale`, `days-before-close`, exempt labels; defaults **60** / **7** days).
+Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md`: a parameter table for `days-before-stale`, `days-before-close`, and `max-issues-per-run` (defaults **60**, **7**, **30**), plus exempt labels below it.
 
 Unlike timer-only bots, the model reads each thread end to end and drafts issue-specific comments.
 
@@ -12,7 +12,7 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 - Summarize the thread; note resolved vs open  
 - Apply `Stale` label, comment, close after `days-before-close`, remove `Stale` label on non-bot activity  
 - Respect exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted` by default)  
-- Cap volume per run (`safe-outputs` + Step 2 “top N”, default 30)
+- Cap volume per run (`max-issues-per-run` in `## Configuration`, default 30; must match `safe-outputs` `max:` in frontmatter)
 
 ## Table of contents
 
@@ -68,9 +68,9 @@ git push
 - Follow [Installation](#installation)
 - Map old settings to this repo:
   - Thresholds → `## Configuration` defaults for `days-before-stale` / `days-before-close`
-  - Volume → frontmatter `safe-outputs` `max:` and Step 2 “top N”, then `gh aw compile`
+  - Per-run volume → `max-issues-per-run` in the Configuration table (Step 2 selects the top `max-issues-per-run` issues); set each `safe-outputs` → `max:` in frontmatter to the same integer, then `gh aw compile`
   - Exempt labels → only under `## Configuration`; keep Guidelines consistent (label **names** on GitHub; Dosu may have used IDs)
-  - Shipped defaults here: **60 / 7 / 30** vs common Dosu-style **90 / 7 / 25** — edit the table and frontmatter to match your policy
+  - Shipped defaults here: **60 / 7 / 30** (`days-before-stale` / `days-before-close` / `max-issues-per-run`) vs common Dosu-style **90 / 7 / 25** — edit the Configuration table and frontmatter to match your policy
 - **Codex (GPT-style models):** `engine: codex`, optional `model:`, add `OPENAI_API_KEY`, recompile — see [engines](https://github.github.com/gh-aw/reference/engines/)
 
 ## Customization
@@ -78,8 +78,8 @@ git push
 - **Rename workflow:** `mv .github/workflows/better-stale-bot.md …` then `gh aw compile <name>`; drop the old `.lock.yml` if it remains
 - **Frontmatter** (`---` … `---`): engine, `safe-outputs` caps, etc. — **recompile** after changes
 - **Markdown body:** takes effect on the next run — **no recompile** unless frontmatter changed
-- **`## Configuration`:** edit timing (parameter defaults) and exempt labels; keep Guidelines aligned (Bucket B defers to Configuration)
-- **Per-run cap:** set every `safe-outputs` `max:` and Step 2 “top N” to the same budget, then recompile
+- **`## Configuration`:** edit `days-before-stale`, `days-before-close`, `max-issues-per-run`, and exempt labels; keep Guidelines aligned (Bucket B defers to Configuration)
+- **`max-issues-per-run`:** must match every `safe-outputs` → `max:` in frontmatter (the compiled workflow enforces those caps). Change the default in the Configuration table and the YAML together, then `gh aw compile`
 - **Edit with an agent:** [create.md](https://raw.githubusercontent.com/github/gh-aw/main/create.md)
 - **Engines** (frontmatter, then recompile): e.g. `engine: copilot`; `engine: { id: claude, model: haiku }`; `engine: claude` (Sonnet); `engine: codex` (+ optional `model:`) — match the repo secret to the engine
 

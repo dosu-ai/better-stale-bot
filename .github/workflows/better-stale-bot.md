@@ -42,12 +42,13 @@ them if they've already been stale long enough.
 
 ## Configuration
 
-Use `days-before-stale` and `days-before-close` everywhere time thresholds appear below. **Edit only the defaults in this section** when changing policy (keep the names unchanged in later steps).
+Use `days-before-stale`, `days-before-close`, and `max-issues-per-run` everywhere those values appear below. **Edit only the defaults in this section** when changing policy (keep the names unchanged in later steps).
 
 | Parameter | Meaning | Default |
 | --------- | ------- | ------- |
 | `days-before-stale` | Minimum whole days of inactivity (no qualifying comment, edit, or label change) before an issue may be marked stale | 60 |
 | `days-before-close` | Minimum whole days after the `Stale` label is applied before an issue may be closed, if there is still no non-bot activity | 7 |
+| `max-issues-per-run` | Maximum distinct issues you may touch with safe outputs in one run (label, comment, close, un-stale). Must match each `safe-outputs` → `max:` value in the YAML frontmatter; after changing frontmatter, run `gh aw compile`. | 30 |
 
 - **Stale label**: `Stale`
 - **Exempt labels**: Issues with the labels `agentic-workflows`, `pinned`, `security`, or `help wanted` should never be marked stale
@@ -77,7 +78,7 @@ staleness_score = 3 × (number of distinct users who commented or reacted)
 (weeks since last updated)
 
 Sort issues by staleness score in **ascending order** (lowest score = least engagement = highest
-priority for stale labeling). Select the top 30 issues.
+priority for stale labeling). Select the top `max-issues-per-run` issues.
 
 ## Step 3: Process Each Issue
 
