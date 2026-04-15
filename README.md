@@ -1,6 +1,6 @@
 # better-stale-bot
 
-An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). It summarizes inactive issues, applies a `Stale` label with a tailored comment, closes them after a quiet period, and removes the label when a **non-bot** user engages again. Policy lives in **`## Configuration`** in `.github/workflows/better-stale-bot.md`: **`days-before-stale`**, **`days-before-close`**, and exempt labels (defaults 60 / 7 days).
+An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). It summarizes inactive issues, applies a `Stale` label with a tailored comment, closes them after a quiet period, and removes the label when a **non-bot** user engages again. Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md`: `days-before-stale`, `days-before-close`, and exempt labels (defaults 60 / 7 days).
 
 Unlike timer-only bots, the model reads each thread and drafts issue-specific comments.
 
@@ -8,7 +8,7 @@ Unlike timer-only bots, the model reads each thread and drafts issue-specific co
 
 - Rank and process low-engagement issues first  
 - Summarize the thread; note resolved vs open  
-- Apply `Stale`, comment, close after **`days-before-close`**, remove **Stale** on non-bot activity  
+- Apply `Stale` label, comment, close after `days-before-close`, remove `Stale` label on non-bot activity  
 - Respect exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted` by default)  
 - Cap volume per run (`safe-outputs` + Step 2 “top N”, default 30)
 
@@ -38,7 +38,7 @@ Add a repository secret under **Settings → Secrets and variables → Actions**
 | Claude   | `ANTHROPIC_API_KEY` |
 | Codex    | `OPENAI_API_KEY`    |
 
-Add the workflow and compile:
+Add the workflow, compile it, and merge to main:
 
 ```bash
 mkdir -p .github/workflows
@@ -54,9 +54,9 @@ Run: `gh aw run better-stale-bot` or use the **Actions** tab.
 
 ## Migrating from Dosu's stale bot
 
-1. **Disable** the old automation (Dosu's deployment stale bot and/or other GitHub workflows like `actions/stale`) so two bots do not compete.
-2. Follow **[Installation](#installation)**.
-3. **Map settings:** thresholds → **`## Configuration`** defaults for **`days-before-stale`** / **`days-before-close`**; volume → frontmatter **`safe-outputs`** `max:` + Step 2 “top N” (then `gh aw compile`); exempt labels → listed under **Configuration** only—keep **Guidelines** consistent (use **label names** on GitHub; Dosu may have used IDs). Shipped defaults are roughly **60 / 7 / 30** vs common Dosu-style **90 / 7 / 25**—adjust the table and frontmatter to match your policy.
+1. Disable the old automation (Dosu's deployment stale bot and/or other GitHub workflows like `actions/stale`) so two bots do not compete.
+2. Follow [Installation](#installation).
+3. **Map settings:** thresholds → `## Configuration` defaults for `days-before-stale` / `days-before-close`; volume → frontmatter `safe-outputs` `max:` + Step 2 “top N” (then `gh aw compile`); exempt labels → listed under `## Configuration` only—keep Guidelines consistent (use label names on GitHub; Dosu may have used IDs). Shipped defaults are roughly **60 / 7 / 30** vs common Dosu-style **90 / 7 / 25**—adjust the table and frontmatter to match your policy.
 
 **Codex (GPT-style models):** set `engine: codex` (+ optional `model:`) in frontmatter, add `OPENAI_API_KEY`, recompile — see [engines](https://github.github.com/gh-aw/reference/engines/).
 
@@ -66,7 +66,7 @@ Run: `gh aw run better-stale-bot` or use the **Actions** tab.
 - **Frontmatter** (`---` … `---`): engine, `safe-outputs` caps, etc. — **recompile** after edits.
 - **Markdown body:** agent instructions — edits apply on the next run; **no recompile** unless frontmatter changed.
 
-Edit **`## Configuration`** for timing (parameter table defaults) and exempt labels; keep **Guidelines** consistent with that list (Bucket B defers to Configuration). Tune tone and footer in Step 3. To change per-run volume, update every `safe-outputs` `max:` and Step 2’s “top N”, then recompile.
+Edit `## Configuration` for timing (parameter table defaults) and exempt labels; keep Guidelines consistent with that list (Bucket B defers to Configuration). Tune tone and footer in Step 3. To change per-run volume, update every `safe-outputs` `max:` and Step 2’s “top N”, then recompile.
 
 Use an AI agent with [create.md](https://raw.githubusercontent.com/github/gh-aw/main/create.md) if you prefer not to edit by hand.
 
@@ -75,9 +75,9 @@ Use an AI agent with [create.md](https://raw.githubusercontent.com/github/gh-aw/
 ## Tips
 
 - **Billing** — costs follow your engine’s pricing and scale with how many issues you touch and how long threads are; test runs in this repo are not representative since thread sizes can vary.
-- Exempt meta issues (e.g. `agentic-workflows`, `pinned`, `security`, `help wanted`) via **`## Configuration`**.
+- Exempt meta issues (e.g. `agentic-workflows`, `pinned`, `security`, `help wanted`) via `## Configuration`.
 - The **30-issue** cap is per workflow run (each `safe-outputs` type + Step 2 budget).
-- Steps 2–3 handle new **Stale** labels; Step 4 closes expired stale issues / removes **Stale** on non-bot activity.
+- Steps 2–3 handle new `Stale` labels; Step 4 closes expired stale issues / removes `Stale` on non-bot activity.
 
 ## Additional Resources
 

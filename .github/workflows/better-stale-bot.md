@@ -42,7 +42,7 @@ them if they've already been stale long enough.
 
 ## Configuration
 
-Use **`days-before-stale`** and **`days-before-close`** everywhere time thresholds appear below. **Edit only the defaults in this section** when changing policy (keep the names unchanged in later steps).
+Use `days-before-stale` and `days-before-close` everywhere time thresholds appear below. **Edit only the defaults in this section** when changing policy (keep the names unchanged in later steps).
 
 | Parameter | Meaning | Default |
 | --------- | ------- | ------- |
@@ -58,15 +58,14 @@ Use the GitHub tools to fetch all open issues in this repository. Split them int
 
 ### Bucket A — Already-stale issues (for potential closure)
 Issues that already have the `Stale` label applied. Check the label's `created_at` or the
-most recent bot comment that applied the stale label. If **at least `days-before-close`**
-full days have passed since the stale label was applied AND no non-bot user has commented since, these issues
+most recent bot comment that applied the stale label. If at least `days-before-close` full days have passed since the stale label was applied AND no non-bot user has commented since, these issues
 should be closed.
 
-If a non-bot user has commented since the stale label was applied, **remove the `Stale` label**
+If a non-bot user has commented since the stale label was applied, remove the `Stale` label
 instead — the issue is no longer stale.
 
 ### Bucket B — Potentially stale issues (for labeling)
-Issues WITHOUT the `Stale` label where **at least `days-before-stale` full days** have passed since the most recent activity (comment, edit, or label change). Exclude issues that have any **exempt label** defined in Configuration above.
+Issues WITHOUT the `Stale` label where at least `days-before-stale` full days have passed since the most recent activity (comment, edit, or label change). Exclude issues that have any exempt label defined in Configuration above.
 
 ## Step 2: Rank Potentially Stale Issues (Bucket B)
 
@@ -103,7 +102,7 @@ For each issue selected for stale labeling:
    - If UNRESOLVED: acknowledge it hasn't been resolved yet
    - Explain that the issue is being marked as stale due to inactivity
    - Invite the author or community to comment if the issue is still relevant
-   - Mention that the issue will be closed automatically if there is no qualifying activity for **`days-before-close`** days; state the duration in plain language using the current default from Configuration (e.g. "in 7 days" when the default is 7)
+   - Mention that the issue will be closed automatically if there is no qualifying activity for `days-before-close` days; state the duration in plain language using the current default from Configuration (e.g. "in 7 days" when the default is 7)
    - Be written in first person ("I") as the bot
    - Be concise — no more than a few short paragraphs
    - End with a short footer: "— better-stale-bot"
@@ -113,7 +112,7 @@ For each issue selected for stale labeling:
 
 ## Step 4: Close Expired Stale Issues (Bucket A)
 
-For each already-stale issue for which the **`days-before-close`** grace period has elapsed with no non-bot activity:
+For each already-stale issue for which the `days-before-close` grace period has elapsed with no non-bot activity:
 - Use `close-issue` to close it with state reason `not_planned`
 
 For each already-stale issue where a non-bot user has commented since the stale label:
