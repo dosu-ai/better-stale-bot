@@ -15,6 +15,15 @@ Rules-based stale bots often use fixed timers and canned messages. Here the mode
 - Removes the stale label when a **non-bot** user comments, giving the issue a second chance
 - Respects exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted`)
 
+## Table of contents
+
+- [Installation](#installation)
+- [Customization](#customization)
+- [Cost](#cost)
+- [Tips](#tips)
+- [Additional Resources](#additional-resources)
+- [License](#license)
+
 ## Installation
 
 ### Prerequisites
