@@ -22,15 +22,15 @@ tools:
 
 safe-outputs:
   add-comment:
-    max: 25
+    max: 30
   add-labels:
-    max: 25
+    max: 30
     allowed: ["Stale"]
   remove-labels:
-    max: 25
+    max: 30
     allowed: ["Stale"]
   close-issue:
-    max: 25
+    max: 30
   noop:
 ---
 
@@ -42,9 +42,8 @@ them if they've already been stale long enough.
 
 ## Configuration
 
-- **Days before stale**: 90 days of inactivity before marking an issue as stale
+- **Days before stale**: 60 days of inactivity before marking an issue as stale
 - **Days before close**: 7 days after the stale label is applied before closing
-- **Max issues per run**: Never process more than 25 issues total per run — this includes both adding comments and adding labels.
 - **Stale label**: `Stale`
 - **Exempt labels**: Issues with the labels `agentic-workflows`, `pinned`, `security`, or `help wanted` should never be marked stale
 
@@ -63,7 +62,7 @@ instead — the issue is no longer stale.
 
 ### Bucket B — Potentially stale issues (for labeling)
 Issues WITHOUT the `Stale` label where the most recent activity (comment, edit, or label change)
-is **older than 90 days**. Exclude issues with exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted`).
+is **older than 60 days**. Exclude issues with exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted`).
 
 ## Step 2: Rank Potentially Stale Issues (Bucket B)
 
@@ -75,7 +74,7 @@ staleness_score = 3 × (number of distinct users who commented or reacted)
 (weeks since last updated)
 
 Sort issues by staleness score in **ascending order** (lowest score = least engagement = highest
-priority for stale labeling). Select the top 25 issues.
+priority for stale labeling). Select the top 30 issues.
 
 ## Step 3: Process Each Issue
 

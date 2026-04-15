@@ -6,7 +6,7 @@ Rules-based stale bots often use fixed timers and canned messages. Here the mode
 
 **What it does:**
 
-- Identifies issues inactive for 90+ days (configurable)
+- Identifies issues inactive for 60+ days (configurable)
 - Ranks issues by engagement — low-activity issues are processed first
 - Summarizes each issue and its discussion thread
 - Determines if the issue appears resolved or still open
@@ -104,10 +104,10 @@ Open `.github/workflows/better-stale-bot.md` in any editor. The file has two par
 
 Common customizations in the markdown body:
 
-- **Thresholds** — change the days before stale (default 90) and days before close (default 7)
+- **Thresholds** — change the days before stale (default 60) and days before close (default 7)
 - **Exempt labels** — edit the list of labels that should never be marked stale
 - **Comment tone** — adjust the stale comment guidelines to match your project's voice
-- **Max issues per run** — change the limit (default 25)
+- **Max issues per run** — change the limit (default 30)
 - **Footer** — customize or remove the `— better-stale-bot` signature
 
 ### Adjusting the prompt with an AI agent
@@ -119,7 +119,7 @@ Update the stale bot workflow at .github/workflows/better-stale-bot.md using
 https://raw.githubusercontent.com/github/gh-aw/main/create.md
 
 I want to change:
-- [describe your changes, e.g., "mark issues stale after 30 days instead of 90"]
+- [describe your changes, e.g., "mark issues stale after 30 days instead of 60"]
 - [e.g., "add a 'wontfix' exempt label"]
 - [e.g., "make the stale comment more casual and friendly"]
 ```
@@ -168,12 +168,12 @@ Cost depends on engine, model, and number of issues processed. All costs are per
 | Claude Haiku 4.5  | 25     | ~$0.43 | ~4 min         | ~6 min            |
 | Claude Sonnet 4.6 | 5      | ~$0.24 | ~2 min         | ~4 min            |
 
-**Average cost per issue with Haiku: ~$0.02.** A daily run processing 25 issues would cost roughly $0.43/day or ~$13/month.
+**Average cost per issue with Haiku: ~$0.02.** A daily run processing 30 issues would cost roughly $0.52/day or ~$16/month.
 
 ## Tips
 
 - **Protect system issues from stale labeling** — the default prompt exempts issues with the `agentic-workflows` label (auto-applied by GitHub Agentic Workflows to noop tracking issues). If your repo has other auto-generated or meta issues you want to protect, add their labels to the exempt list in the markdown body, or apply one of the existing exempt labels (`pinned`, `security`, `help wanted`).
-- **The 25-issue limit is per run, not per day** — if you manually trigger the workflow multiple times in a day, each run can process up to 25 issues independently.
+- **The 30-issue limit is per run, not per day** — if you manually trigger the workflow multiple times in a day, each run can process up to 30 issues independently.
 - **Closures are prioritized over new stale labels** — issues already marked stale that have exceeded the 7-day grace period are closed first. Remaining budget is used to label new stale issues.
 
 ## Additional Resources
