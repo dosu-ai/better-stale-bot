@@ -12,7 +12,7 @@ Rules-based stale bots often use fixed timers and canned messages. Here the mode
 - Determines if the issue appears resolved or still open
 - Posts a helpful, context-aware stale comment
 - Closes stale-labeled issues after a 7-day grace period (configurable)
-- Removes the stale label if someone comments, giving the issue a second chance
+- Removes the stale label when a **non-bot** user comments, giving the issue a second chance
 - Respects exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted`)
 
 ## Installation
@@ -20,8 +20,8 @@ Rules-based stale bots often use fixed timers and canned messages. Here the mode
 ### Prerequisites
 
 - **AI engine account** — one of:
-  - [GitHub Copilot](https://github.com/features/copilot) (default engine)
-  - [Anthropic Claude](https://www.anthropic.com/)
+  - [GitHub Copilot](https://github.com/features/copilot) (GitHub Agentic-Workflows default engine)
+  - [Anthropic Claude](https://www.anthropic.com/) (this workflow’s frontmatter defaults to **Haiku** for cost efficiency; change in frontmatter if you prefer another model)
   - [OpenAI Codex](https://openai.com/api/)
 - **GitHub repository** with write access and [Actions enabled](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository)
 - **GitHub CLI** v2.0.0+ — [install here](https://cli.github.com/). Check version: `gh --version`
@@ -168,13 +168,13 @@ Cost depends on engine, model, and number of issues processed. All costs are per
 | Claude Haiku 4.5  | 25     | ~$0.43 | ~4 min         | ~6 min            |
 | Claude Sonnet 4.6 | 5      | ~$0.24 | ~2 min         | ~4 min            |
 
-**Average cost per issue with Haiku: ~$0.02.** A daily run processing 30 issues would cost roughly $0.52/day or ~$16/month.
+**Average cost per issue with Haiku: ~$0.02.** The table rows are **example runs** from tests (fixed issue counts); real spend depends on model, thread size, and how many issues a run actually touches.
 
 ## Tips
 
 - **Protect system issues from stale labeling** — the default prompt exempts issues with the `agentic-workflows` label (auto-applied by GitHub Agentic Workflows to noop tracking issues). If your repo has other auto-generated or meta issues you want to protect, add their labels to the exempt list in the markdown body, or apply one of the existing exempt labels (`pinned`, `security`, `help wanted`).
 - **The 30-issue limit is per run, not per day** — if you manually trigger the workflow multiple times in a day, each run can process up to 30 issues independently.
-- **Closures are prioritized over new stale labels** — issues already marked stale that have exceeded the 7-day grace period are closed first. Remaining budget is used to label new stale issues.
+- **Step order in the prompt** — the markdown walks through **Bucket B** (rank and apply new `Stale` labels) in Steps 2–3, then **Bucket A** (close expired stale issues and remove `Stale` when someone commented) in Step 4. Safe-output `max: 30` caps writes per type; edit the prompt if you want a different ordering or a single combined budget across buckets.
 
 ## Additional Resources
 
