@@ -1,8 +1,8 @@
 # better-stale-bot
 
-An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). On each run it finds inactive issues, summarizes the thread, applies a `Stale` label with a tailored comment, closes issues after a grace period when they stay quiet, and removes the label when someone participates again—all according to thresholds and exempt labels you set in the workflow.
+An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). On each run it finds inactive issues, summarizes the thread, applies a `Stale` label with a tailored comment, closes issues after a grace period when they stay quiet, and removes the label when someone participates again — all according to thresholds and exempt labels you set in the workflow.
 
-Rules-based stale bots often use fixed timers and canned messages. Here the model reads each issue end to end, reasons about whether the thread still looks actionable, and drafts a short comment that reflects that state—so maintainers and readers get context, not just a countdown.
+Rules-based stale bots often use fixed timers and canned messages. Here the model reads each issue end to end, reasons about whether the thread still looks actionable, and drafts a short comment that reflects that state — so maintainers and readers get context, not just a countdown.
 
 **What it does:**
 
