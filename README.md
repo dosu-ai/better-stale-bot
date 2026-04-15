@@ -1,10 +1,9 @@
 # better-stale-bot
 
-- AI-powered stale issue bot using [GitHub Agentic Workflows](https://github.github.com/gh-aw/)
-- Summarizes inactive issues, applies `Stale`, posts a comment, closes after a quiet period, removes `Stale` when a **non-bot** user engages again
-- Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md`: `days-before-stale`, `days-before-close`, exempt labels (defaults **60** / **7** days)
+An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). It summarizes inactive issues, applies a `Stale` label, posts a tailored comment, closes them after a quiet period, and removes `Stale` when a **non-bot** user engages again. 
+Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md` (`days-before-stale`, `days-before-close`, exempt labels; defaults **60** / **7** days).
 
-Unlike timer-only bots, the model reads each thread and drafts issue-specific comments.
+Unlike timer-only bots, the model reads each thread end to end and drafts issue-specific comments.
 
 **What it does**
 
