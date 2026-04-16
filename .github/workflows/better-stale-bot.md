@@ -59,12 +59,13 @@ Use `days-before-stale` and `days-before-close` everywhere those values appear b
 Use the GitHub tools to fetch all open issues in this repository. Split them into two buckets:
 
 ### Bucket A — Already-stale issues (for potential closure)
-Issues that already have the `Stale` label applied. Check the label's `created_at` or the
-most recent bot comment that applied the stale label. If at least `days-before-close` full days have passed since the stale label was applied AND no non-bot user has commented since, these issues
-should be closed.
+Issues that currently have the `Stale` label. In Step 4, every decision uses `stale_label_applied_at`:
 
-If a non-bot user has commented since the stale label was applied, remove the `Stale` label
-instead — the issue is no longer stale.
+- Definition: the timestamp when the `Stale` label was most recently added for the label that is on the issue now. Use labeled/timeline events from the GitHub tools (or the label association time if that is all you have). If `Stale` was removed and later re-added, use only the latest addition. Do not use the time of an old bot “marked stale” comment, the first historical stale labeling, or any timestamp that does not match the current `Stale` label.
+
+- Close: only if at least `days-before-close` full days have passed since `stale_label_applied_at` and there has been no qualifying non-bot activity strictly after `stale_label_applied_at`.
+
+- Remove `Stale`: if there is qualifying non-bot activity strictly after `stale_label_applied_at` (activity that predates the latest labeling does not count).
 
 ### Bucket B — Potentially stale issues (for labeling)
 Issues WITHOUT the `Stale` label where at least `days-before-stale` full days have passed since the most recent activity (comment, edit, or label change). Exclude issues that have any exempt label defined in Configuration above.
@@ -83,7 +84,9 @@ Then compute:
 
 Whenever you reason about ranking or priority for Bucket B, show the substituted arithmetic for that issue, for example: `engagement_score = 3 × 1 + 2 × 4 + 0 = 11` (with each term labeled as distinct_users, total_comments_and_reactions, and whole_weeks_since_last_updated). Do not report a final score unless it matches this formula. Do not approximate or drop a term.
 
-Sort issues by `engagement_score` in ascending order (lowest `engagement_score` = quietest thread = highest priority for stale labeling). If two issues have the same `engagement_score`, process the one with the earlier `updated_at` first (longer time since last activity).
+Before any `add-comment` or `add-labels` safe output for a Bucket B issue, you must write the full substituted line for that issue (all three products and the sum). A lone final number without `3 × … + 2 × … + …` is not sufficient.
+
+Sort issues by `engagement_score` in ascending order (lowest `engagement_score` = quietest thread = highest priority for stale labeling). If two issues have the same `engagement_score`, process the one whose last non-bot activity has the earlier timestamp first.
 
 In Step 3, process issues in that order from the top; stop before exceeding the compiled safe-output caps (each output type has its own `max:` in frontmatter).
 
@@ -116,7 +119,7 @@ For each issue selected for stale labeling:
 
    Before emitting the final comment, double-check that its language matches the detected issue title language; if not, regenerate it in the correct language.
 
-5. **Apply the stale label and post the comment**: Use the `add-comment` safe output to post
+5. Apply the stale label and post the comment: Use the `add-comment` safe output to post
    the generated comment, then use `add-labels` to apply the `Stale` label.
 
 ## Step 4: Close Expired Stale Issues (Bucket A)
@@ -125,8 +128,8 @@ For each already-stale issue for which the `days-before-close` grace period has 
 - Before closing, post a brief closing comment in the same language as the issue title explaining that the stale period has expired with no qualifying activity.
 - Use `close-issue` to close it with state reason `not_planned`
 
-For each already-stale issue where a non-bot user has commented since the stale label:
-- Use `remove-labels` to remove the `Stale` label (the issue is active again)
+For each issue where there is qualifying non-bot activity strictly after `stale_label_applied_at`:
+- Use `remove-labels` to remove the `Stale` label (the issue is active again). Do not treat comments or events that occurred before the latest `Stale` label was applied as grounds for removal.
 
 ## Step 5: Record State
 
