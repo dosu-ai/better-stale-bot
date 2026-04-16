@@ -42,7 +42,7 @@ them if they've already been stale long enough.
 
 ## Configuration
 
-Use `days-before-stale` and `days-before-close` everywhere those values appear below. **Edit only the defaults in this section** when changing policy (keep the names unchanged in later steps).
+Use `days-before-stale` and `days-before-close` everywhere those values appear below. Edit only the defaults in this section when changing policy (keep the names unchanged in later steps).
 
 | Parameter | Meaning | Default |
 | --------- | ------- | ------- |
@@ -103,17 +103,17 @@ For each issue selected for stale labeling:
      answered or fixed based on the discussion
    - `UNRESOLVED` — if the issue still appears to be an open question or unfixed bug
 
-4. **Generate a stale comment**: Write a helpful, empathetic comment to post on the issue.
-   Before drafting, detect the primary language of the issue title and use that language for all generated text. If the issue contains multiple languages, use the language of the issue title.
-   The comment should:
-   - Acknowledge the issue and briefly summarize its current status
-   - If RESOLVED: explain that it appears resolved and mention the resolution
-   - If UNRESOLVED: acknowledge it hasn't been resolved yet
-   - Explain that the issue is being marked as stale due to inactivity
-   - Invite the author or community to comment if the issue is still relevant
-   - Mention that the issue will be closed automatically if there is no qualifying activity for `days-before-close` days; state the duration in plain language using the current default from Configuration (e.g. "in 7 days" when the default is 7)
-   - Be written in first person ("I") as the bot
-   - Be concise — no more than a few short paragraphs
+4. Generate a stale comment: Before drafting, detect the primary language of the issue title and use that language for all generated text. If the issue contains multiple languages, use the language of the issue title.
+
+   Follow this mandatory structure (use section titles and wording that read naturally in that language; keep the same meaning):
+
+   1. Opening — One or two short sentences in first person as the bot: you are marking this issue as stale due to inactivity. Optionally greet the issue author with `@login` when GitHub metadata provides a clear author login; otherwise omit the mention.
+   2. Issue summary — A short block (2–4 sentences for real issues; shorter for trivial test issues) covering what the issue is about, what was discussed, and whether it looks resolved or still unresolved from the thread. If it looks resolved but unconfirmed, say so clearly instead of thanking as if closure is final.
+   3. Next steps — Ask the author or anyone following to comment if the issue is still relevant. State that if there is no qualifying non-bot activity for `days-before-close` full days (use the current default from Configuration), the issue will be closed automatically. Give the duration in plain language (e.g. "in 7 days" when the default is 7). Do not use vague timing ("soon", "very near future", "shortly").
+   4. Thanks — One short closing line of appreciation.
+
+   Style: empathetic and concise; default to no emoji unless the existing thread clearly uses them. Do not contradict yourself (e.g. do not sound like the issue is fully closed while also inviting discussion).
+
    Before emitting the final comment, double-check that its language matches the detected issue title language; if not, regenerate it in the correct language.
 
 5. **Apply the stale label and post the comment**: Use the `add-comment` safe output to post
