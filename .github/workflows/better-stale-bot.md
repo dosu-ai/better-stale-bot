@@ -113,6 +113,7 @@ For each issue selected for stale labeling:
 ## Step 4: Close Expired Stale Issues (Bucket A)
 
 For each already-stale issue for which the `days-before-close` grace period has elapsed with no non-bot activity:
+- Before closing, post a brief closing comment in the same language as the issue title explaining that the stale period has expired with no qualifying activity.
 - Use `close-issue` to close it with state reason `not_planned`
 
 For each already-stale issue where a non-bot user has commented since the stale label:
