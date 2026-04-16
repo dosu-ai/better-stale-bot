@@ -76,8 +76,8 @@ git push
 ## Customization
 
 - **Rename workflow:** rename the markdown file in `.github/workflows/`, then `gh aw compile <name>`, drop the old `.lock.yml` if it remains
-- **Frontmatter**: modify AI engine and model choice, `safe-outputs` caps, schedule frequency. — **recompile** with `gh aw compile` after changes
-  - **Engines:** e.g. `engine: copilot`; `engine: { id: claude, model: haiku }`; `engine: claude` (Sonnet); `engine: codex` (+ optional `model:`) — match the repo secret to the engine 
+- **Frontmatter**: modify AI engine and model choice, `safe-outputs` caps, schedule frequency. **recompile** with `gh aw compile` after changes
+  - **AI Engines:** e.g. `engine: copilot`; `engine: { id: claude, model: haiku }`; `engine: claude` (Sonnet); `engine: codex` (+ optional `model:`) — match the repo secret to the engine 
   - `max-issues-per-run`: must match every `safe-outputs` → `max:` in frontmatter (the compiled workflow enforces those caps).
 - **Markdown body:** takes effect on the next run — no recompile needed unless frontmatter changed
   - `## Configuration`: edit `days-before-stale`, `days-before-close`, `max-issues-per-run`, and exempt labels; keep Guidelines aligned
