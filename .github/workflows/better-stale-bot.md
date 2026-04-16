@@ -46,9 +46,9 @@ Use `days-before-stale`, `days-before-close`, and `max-issues-per-run` everywher
 
 | Parameter | Meaning | Default |
 | --------- | ------- | ------- |
-| `days-before-stale` | Minimum whole days of inactivity (no qualifying comment, edit, or label change) before an issue may be marked stale | 60 |
-| `days-before-close` | Minimum whole days after the `Stale` label is applied before an issue may be closed, if there is still no non-bot activity | 7 |
-| `max-issues-per-run` | Maximum distinct issues you may touch with safe outputs in one run (label, comment, close, un-stale). Must match each `safe-outputs` → `max:` value in the YAML frontmatter; after changing frontmatter, run `gh aw compile`. | 30 |
+| `days-before-stale` | Minimum whole days of inactivity (no qualifying comment, edit, or label change) before an issue may be marked stale | 1 |
+| `days-before-close` | Minimum whole days after the `Stale` label is applied before an issue may be closed, if there is still no non-bot activity | 1 |
+| `max-issues-per-run` | Maximum distinct issues you may touch with safe outputs in one run (label, comment, close, un-stale). Must match each `safe-outputs` → `max:` value in the YAML frontmatter; after changing frontmatter, run `gh aw compile`. | 2 |
 
 - **Stale label**: `Stale`
 - **Exempt labels**: Issues with the labels `agentic-workflows`, `pinned`, `security`, or `help wanted` should never be marked stale
