@@ -42,16 +42,17 @@ them if they've already been stale long enough.
 
 ## Configuration
 
-Use `days-before-stale`, `days-before-close`, and `max-issues-per-run` everywhere those values appear below. **Edit only the defaults in this section** when changing policy (keep the names unchanged in later steps).
+Use `days-before-stale` and `days-before-close` everywhere those values appear below. **Edit only the defaults in this section** when changing policy (keep the names unchanged in later steps).
 
 | Parameter | Meaning | Default |
 | --------- | ------- | ------- |
 | `days-before-stale` | Minimum whole days of inactivity (no qualifying comment, edit, or label change) before an issue may be marked stale | 1 |
 | `days-before-close` | Minimum whole days after the `Stale` label is applied before an issue may be closed, if there is still no non-bot activity | 1 |
-| `max-issues-per-run` | Maximum distinct issues you may touch with safe outputs in one run (label, comment, close, un-stale). Must match each `safe-outputs` → `max:` value in the YAML frontmatter; after changing frontmatter, run `gh aw compile`. | 2 |
 
 - **Stale label**: `Stale`
 - **Exempt labels**: Issues with the labels `agentic-workflows`, `pinned`, `security`, or `help wanted` should never be marked stale
+
+**Write limits (frontmatter, not duplicated here):** Maximum uses per run for `add-comment`, `add-labels`, `remove-labels`, and `close-issue` are set under `safe-outputs` in the YAML frontmatter above. The compiled workflow enforces each limit independently. After changing those `max:` values, run `gh aw compile`. You do not need a separate “issues per run” parameter in this table—the handler rejects excess safe outputs.
 
 ## Step 1: Retrieve and Categorize Issues
 
@@ -78,7 +79,7 @@ staleness_score = 3 × (number of distinct users who commented or reacted)
 (weeks since last updated)
 
 Sort issues by staleness score in **ascending order** (lowest score = least engagement = highest
-priority for stale labeling). Select the top `max-issues-per-run` issues.
+priority for stale labeling). In Step 3, process issues in that order from the top; stop before exceeding the compiled safe-output caps (each output type has its own `max:` in frontmatter).
 
 ## Step 3: Process Each Issue
 
@@ -145,3 +146,4 @@ recently handled.
   a message like "No stale issues to process today."
 - When removing the stale label from re-activated issues, do NOT post a comment —
   just silently remove the label.
+- **Safe outputs:** Each output type has its own per-run cap from compiled `safe-outputs`. Do not defer Bucket A closures only because you used Bucket B labeling earlier—unless a specific output type would exceed its cap.

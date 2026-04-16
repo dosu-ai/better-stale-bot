@@ -2,7 +2,7 @@
 
 An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). It summarizes inactive issues, applies a `Stale` label, posts a tailored comment, closes them after a quiet period, and removes `Stale` when a **non-bot** user engages again. 
 
-Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md`: a parameter table for `days-before-stale`, `days-before-close`, and `max-issues-per-run` (defaults **60**, **7**, **30**), plus exempt labels below it.
+Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md`: `days-before-stale`, `days-before-close`, and exempt labels (defaults **60** / **7** days). Per-run write caps are only in YAML `safe-outputs` → `max:` (frontmatter); recompile after changing them.
 
 Unlike timer-only bots, the model reads each thread end to end and drafts issue-specific comments.
 
@@ -12,7 +12,7 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 - Summarize the thread; note resolved vs open  
 - Apply `Stale` label, comment, close after `days-before-close`, remove `Stale` label on non-bot activity  
 - Respect exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted` by default)  
-- Cap volume per run (`max-issues-per-run` in `## Configuration`, default 30; must match `safe-outputs` `max:` in frontmatter)
+- Write volume is capped by compiled `safe-outputs` (`add-comment`, `add-labels`, etc.); tune `max:` in frontmatter and `gh aw compile`
 
 ## Table of contents
 
@@ -68,19 +68,18 @@ git push
 - Follow [Installation](#installation)
 - Map old settings to this repo:
   - Thresholds → `## Configuration` defaults for `days-before-stale` / `days-before-close`
-  - Per-run volume → `max-issues-per-run` in the Configuration table (Step 2 selects the top `max-issues-per-run` issues); set each `safe-outputs` → `max:` in frontmatter to the same integer, then `gh aw compile`
+  - Per-run write limits → `safe-outputs` → `max:` in frontmatter, then `gh aw compile` (each output type capped separately; see [Safe Outputs](https://github.github.com/gh-aw/reference/safe-outputs/))
   - Exempt labels → only under `## Configuration`; keep Guidelines consistent (label **names** on GitHub; Dosu may have used IDs)
-  - Shipped defaults here: **60 / 7 / 30** (`days-before-stale` / `days-before-close` / `max-issues-per-run`) vs common Dosu-style **90 / 7 / 25** — edit the Configuration table and frontmatter to match your policy
+  - Shipped defaults here: **60 / 7** days vs common Dosu-style **90 / 7** — edit the Configuration table; adjust `safe-outputs` `max:` if you need different volume
 - **Codex (GPT-style models):** `engine: codex`, optional `model:`, add `OPENAI_API_KEY`, recompile — see [engines](https://github.github.com/gh-aw/reference/engines/)
 
 ## Customization
 
 - **Rename workflow:** rename the markdown file in `.github/workflows/`, then `gh aw compile <name>`, drop the old `.lock.yml` if it remains
-- **Frontmatter**: modify AI engine and model choice, `safe-outputs` caps, schedule frequency. **recompile** with `gh aw compile` after changes
+- **Frontmatter**: modify AI engine and model choice, `safe-outputs` → `max:` (per output type), schedule frequency. **recompile** with `gh aw compile` after changes
   - **AI Engines:** e.g. `engine: copilot`; `engine: { id: claude, model: haiku }`; `engine: claude` (Sonnet); `engine: codex` (+ optional `model:`) — match the repo secret to the engine 
-  - `max-issues-per-run`: must match every `safe-outputs` → `max:` in frontmatter (the compiled workflow enforces those caps).
 - **Markdown body:** takes effect on the next run — no recompile needed unless frontmatter changed
-  - `## Configuration`: edit `days-before-stale`, `days-before-close`, `max-issues-per-run`, and exempt labels; keep Guidelines aligned
+  - `## Configuration`: edit `days-before-stale`, `days-before-close`, and exempt labels; keep Guidelines aligned
 - **Edit with a coding agent:** tell your agent to reference https://raw.githubusercontent.com/github/gh-aw/main/create.md prompt as the base spec so the agent follows gh-aw workflows formatting and safety standards (YAML frontmatter + instruction body), say what you want changed, and reference `better-stale-bot.md` as the file to update. See more in [Additional Resources](#additional-resources)
 
 ## Tips
