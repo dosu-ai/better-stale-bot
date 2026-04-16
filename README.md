@@ -75,13 +75,13 @@ git push
 
 ## Customization
 
-- **Rename workflow:** `mv .github/workflows/better-stale-bot.md …` then `gh aw compile <name>`; drop the old `.lock.yml` if it remains
+- **Rename workflow:** rename the markdown file in `.github/workflows/`, then `gh aw compile <name>`, drop the old `.lock.yml` if it remains
 - **Frontmatter**: modify AI engine and model choice, `safe-outputs` caps, schedule frequency. — **recompile** with `gh aw compile` after changes
+  - **Engines:** e.g. `engine: copilot`; `engine: { id: claude, model: haiku }`; `engine: claude` (Sonnet); `engine: codex` (+ optional `model:`) — match the repo secret to the engine 
+  - `max-issues-per-run`: must match every `safe-outputs` → `max:` in frontmatter (the compiled workflow enforces those caps).
 - **Markdown body:** takes effect on the next run — no recompile needed unless frontmatter changed
-- `## Configuration`: edit `days-before-stale`, `days-before-close`, `max-issues-per-run`, and exempt labels; keep Guidelines aligned
-- `max-issues-per-run`: must match every `safe-outputs` → `max:` in frontmatter (the compiled workflow enforces those caps). Change the default in the Configuration table and the YAML together, then recompile with `gh aw compile`
+  - `## Configuration`: edit `days-before-stale`, `days-before-close`, `max-issues-per-run`, and exempt labels; keep Guidelines aligned
 - **Edit with a coding agent:** tell your agent to reference https://raw.githubusercontent.com/github/gh-aw/main/create.md prompt as the base spec so the agent edits **valid** gh-aw workflows (YAML frontmatter + instruction body), say what you want changed, and reference `better-stale-bot.md` as the file to update. See more in [Additional Resources](#additional-resources)
-- **Engines:** e.g. `engine: copilot`; `engine: { id: claude, model: haiku }`; `engine: claude` (Sonnet); `engine: codex` (+ optional `model:`) — match the repo secret to the engine, then recompile with `gh aw compile`
 
 ## Tips
 
