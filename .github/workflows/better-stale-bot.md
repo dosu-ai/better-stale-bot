@@ -74,7 +74,7 @@ Issues WITHOUT the `Stale` label where at least `days-before-stale` full days ha
 For each issue in Bucket B, compute these values from GitHub data (do not guess or omit terms):
 
 - `distinct_users` — count of distinct non-bot users who commented or reacted on the issue
-- `total_comments_and_reactions` — total count of issue comments plus reactions (use counts returned by the GitHub tools; include reactions on the issue and on comments when the API exposes them)
+- `total_comments_and_reactions` — total count of non-bot issue comments plus reactions on the issue or on those comments (only reactions attributable to non-bot actors; exclude bot-authored comments and bot-only bumps)
 - `whole_weeks_since_last_updated` — whole weeks (floor, minimum 0) since the issue’s last update time
 
 Then compute:
