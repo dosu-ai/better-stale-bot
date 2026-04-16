@@ -104,6 +104,7 @@ For each issue selected for stale labeling:
    - Mention that the issue will be closed automatically if there is no qualifying activity for `days-before-close` days; state the duration in plain language using the current default from Configuration (e.g. "in 7 days" when the default is 7)
    - Be written in first person ("I") as the bot
    - Be concise — no more than a few short paragraphs
+   - Respond in the same language as the issue. If the issue contains multiple languages, use the language of the issue title.
    
 5. **Apply the stale label and post the comment**: Use the `add-comment` safe output to post
    the generated comment, then use `add-labels` to apply the `Stale` label.
