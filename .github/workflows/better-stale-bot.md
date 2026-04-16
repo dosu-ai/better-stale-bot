@@ -73,10 +73,7 @@ Issues WITHOUT the `Stale` label where at least `days-before-stale` full days ha
 
 For each issue in Bucket B, calculate a staleness score:
 
-staleness_score = 3 × (number of distinct users who commented or reacted)
-
-2 × (total number of comments + reactions)
-(weeks since last updated)
+`staleness_score = 3 × (distinct users who commented or reacted) + 2 × (total comments + reactions) + 1 × (whole weeks since last updated)`
 
 Sort issues by staleness score in **ascending order** (lowest score = least engagement = highest
 priority for stale labeling). In Step 3, process issues in that order from the top; stop before exceeding the compiled safe-output caps (each output type has its own `max:` in frontmatter).
