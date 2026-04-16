@@ -41,7 +41,7 @@
 #   - actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
 #   - github/gh-aw-actions/setup@2fe53acc038ba01c3bbdc767d4b25df31ca5bdfc # v0.68.1
 
-name: "Stale Issue Bot"
+name: "better-stale-bot"
 "on":
   schedule:
   - cron: "52 10 * * *"
@@ -59,7 +59,7 @@ permissions: {}
 concurrency:
   group: "gh-aw-${{ github.workflow }}"
 
-run-name: "Stale Issue Bot"
+run-name: "better-stale-bot"
 
 jobs:
   activation:
@@ -91,7 +91,7 @@ jobs:
           GH_AW_INFO_VERSION: "2.1.98"
           GH_AW_INFO_AGENT_VERSION: "2.1.98"
           GH_AW_INFO_CLI_VERSION: "v0.68.1"
-          GH_AW_INFO_WORKFLOW_NAME: "Stale Issue Bot"
+          GH_AW_INFO_WORKFLOW_NAME: "better-stale-bot"
           GH_AW_INFO_EXPERIMENTAL: "false"
           GH_AW_INFO_SUPPORTS_TOOLS_ALLOWLIST: "true"
           GH_AW_INFO_STAGED: "false"
@@ -992,7 +992,7 @@ jobs:
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
           GH_AW_NOOP_MAX: "1"
-          GH_AW_WORKFLOW_NAME: "Stale Issue Bot"
+          GH_AW_WORKFLOW_NAME: "better-stale-bot"
           GH_AW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GH_AW_AGENT_CONCLUSION: ${{ needs.agent.result }}
           GH_AW_NOOP_REPORT_AS_ISSUE: "true"
@@ -1009,7 +1009,7 @@ jobs:
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
           GH_AW_MISSING_TOOL_CREATE_ISSUE: "true"
-          GH_AW_WORKFLOW_NAME: "Stale Issue Bot"
+          GH_AW_WORKFLOW_NAME: "better-stale-bot"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
@@ -1023,7 +1023,7 @@ jobs:
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
           GH_AW_REPORT_INCOMPLETE_CREATE_ISSUE: "true"
-          GH_AW_WORKFLOW_NAME: "Stale Issue Bot"
+          GH_AW_WORKFLOW_NAME: "better-stale-bot"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
@@ -1037,7 +1037,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-          GH_AW_WORKFLOW_NAME: "Stale Issue Bot"
+          GH_AW_WORKFLOW_NAME: "better-stale-bot"
           GH_AW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GH_AW_AGENT_CONCLUSION: ${{ needs.agent.result }}
           GH_AW_WORKFLOW_ID: "better-stale-bot"
@@ -1137,7 +1137,7 @@ jobs:
         if: always() && steps.detection_guard.outputs.run_detection == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         env:
-          WORKFLOW_NAME: "Stale Issue Bot"
+          WORKFLOW_NAME: "better-stale-bot"
           WORKFLOW_DESCRIPTION: "AI-powered stale issue bot. Identifies inactive issues, summarizes their status, and marks them as stale with a contextual comment. Closes stale issues after a grace period if no activity occurs."
           HAS_PATCH: ${{ needs.agent.outputs.has_patch }}
         with:
@@ -1242,7 +1242,7 @@ jobs:
       GH_AW_ENGINE_ID: "claude"
       GH_AW_ENGINE_MODEL: "haiku"
       GH_AW_WORKFLOW_ID: "better-stale-bot"
-      GH_AW_WORKFLOW_NAME: "Stale Issue Bot"
+      GH_AW_WORKFLOW_NAME: "better-stale-bot"
     outputs:
       code_push_failure_count: ${{ steps.process_safe_outputs.outputs.code_push_failure_count }}
       code_push_failure_errors: ${{ steps.process_safe_outputs.outputs.code_push_failure_errors }}
