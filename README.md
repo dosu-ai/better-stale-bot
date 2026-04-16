@@ -17,6 +17,7 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 ## Table of contents
 
 - [Installation](#installation)
+- [Migrating from GitHub's stale bot](#migrating-from-githubs-stale-bot)
 - [Migrating from Dosu's stale bot](#migrating-from-dosus-stale-bot)
 - [Customization](#customization)
 - [Tips](#tips)
@@ -62,9 +63,17 @@ git push
 
 - `gh aw run better-stale-bot`, or open the **Actions** tab and run the workflow
 
+## Migrating from GitHub's stale bot
+
+If you use [actions/stale](https://github.com/actions/stale) (or another workflow that wraps it), disable or remove the stale workflow and any schedule so two bots do not compete on items.
+
+Then follow [Installation](#installation). Conceptually, most settings line up with defaults here: inactivity before marking stale, quiet period before closing, exempt labels, and a `Stale`-style label are all driven from `## Configuration` in `better-stale-bot.md` (defaults **60** / **7** days and the exempt list in that file). Adjust that section and frontmatter `safe-outputs` → `max:` to match how many writes you want per run.
+
+**Issues only by default.** The shipped workflow scopes GitHub access to **issues** (frontmatter `permissions` and `tools.github` / `toolsets`), uses issue-only `safe-outputs` (for example `close-issue`), and the prompt is written for issues. To extend behavior to **pull requests**, you need to change the workflow yourself: widen YAML `permissions` (for example `pull-requests`), grant the GitHub `tools` your agent will need for PRs, add or adjust `safe-outputs` for any new write types (comments or state changes on PRs), and update the **markdown instructions** so the agent lists, ranks, and mutates PRs in addition to issues. Recompile with `gh aw compile` after frontmatter edits.
+
 ## Migrating from Dosu's stale bot
 
-- Turn off the previous automation (Dosu's deployment stale bot and/or workflows like `actions/stale`) so two bots do not compete
+- Turn off the previous automation (Dosu's deployment stale bot and/or workflows like `actions/stale`) so two bots do not compete on items.
 - Follow [Installation](#installation)
 - Map old settings to this repo:
   - Thresholds → `## Configuration` defaults for `days-before-stale` / `days-before-close`
