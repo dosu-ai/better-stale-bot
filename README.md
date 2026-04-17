@@ -22,7 +22,7 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 - [Migrating from GitHub's stale bot](#migrating-from-githubs-stale-bot)
 - [Migrating from Dosu's stale bot](#migrating-from-dosus-stale-bot)
 - [Customization](#customization)
-- [No-op run issues and the `agentic-workflows` exempt label](#no-op-run-issues-and-the-agentic-workflows-exempt-label)
+- [No-op posted as an issue](#no-op-posted-as-an-issue)
 - [Tips](#tips)
 - [Additional Resources](#additional-resources)
 - [License](#license)
@@ -100,7 +100,7 @@ Then follow [Installation](#installation). Conceptually, most settings line up w
 
 The default exempt list includes `agentic-workflows` because Agentic Workflows can open a repository issue such as `[aw] No-Op Runs` to track `noop` runs (when the agent reports that there is nothing to do). That issue is labeled `agentic-workflows`, and without an exemption this stale bot could keep summarizing, labeling, or closing it even though Agentic Workflows created it.
 
-If you don't need `noop` runs posted as a repository issue (you can still see them in GitHub Actions run logs), turn off noop issue reporting in that workflow's YAML frontmatter, then recompile:
+If you don't need **better-stale-bot** to post `noop` runs as a repository issue (you can still see them in its GitHub Actions run logs), add the following under `safe-outputs` in `.github/workflows/better-stale-bot.md`, then run `gh aw compile better-stale-bot`:
 
 ```yaml
 safe-outputs:
