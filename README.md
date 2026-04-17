@@ -86,7 +86,8 @@ Then follow [Installation](#installation). Conceptually, most settings line up w
 - Grant the GitHub `tools` the agent will need for PRs
 - Add or adjust `safe-outputs` for any new write types (comments or state changes on PRs)
 - Update the markdown instructions so the agent lists, ranks, and mutates PRs instead of (or in addition to) issues
-- Run `gh aw compile` after frontmatter edits
+
+Run `gh aw compile` after frontmatter edits
 
 ## Migrating from Dosu's stale bot
 
