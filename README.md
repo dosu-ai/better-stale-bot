@@ -13,6 +13,8 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 - Apply `Stale` label, comment, close after `days-before-close`, remove `Stale` label on non-bot activity  
 - Respect exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted` by default)  
 - Write volume is capped by compiled `safe-outputs` (`add-comment`, `add-labels`, etc.); tune `max:` in frontmatter and `gh aw compile`
+- Comments in the issue title's language through prompting
+- Between runs, **cache-memory** stores a short run summary (`## Step 5` in the workflow); the instructions tell the agent to read it at the start of later runs to avoid blind reprocessing
 
 ## Table of contents
 
@@ -20,6 +22,7 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 - [Migrating from GitHub's stale bot](#migrating-from-githubs-stale-bot)
 - [Migrating from Dosu's stale bot](#migrating-from-dosus-stale-bot)
 - [Customization](#customization)
+- [No-op run issues and the `agentic-workflows` exempt label](#no-op-run-issues-and-the-agentic-workflows-exempt-label)
 - [Tips](#tips)
 - [Additional Resources](#additional-resources)
 - [License](#license)
@@ -46,6 +49,8 @@ gh extension install github/gh-aw
 | Copilot | `COPILOT_GITHUB_TOKEN` |
 | Claude  | `ANTHROPIC_API_KEY`  |
 | Codex   | `OPENAI_API_KEY`     |
+
+The workflow you copy from this repo defaults to **Claude Haiku** in YAML frontmatter (`engine: id: claude, model: haiku`). Use `ANTHROPIC_API_KEY` unless you change the engine and recompile. The template also schedules a **daily** run (`on: schedule: daily`); adjust in frontmatter if you want a different frequency.
 
 **Add workflow, compile, push**
 
@@ -90,6 +95,20 @@ Then follow [Installation](#installation). Conceptually, most settings line up w
 - **Markdown body:** takes effect on the next run — no recompile needed unless frontmatter changed
   - `## Configuration`: edit `days-before-stale`, `days-before-close`, and exempt labels; keep Guidelines aligned
 - **Edit with a coding agent:** tell your agent to reference https://raw.githubusercontent.com/github/gh-aw/main/create.md prompt as the base spec so the agent follows gh-aw workflows formatting and safety standards (YAML frontmatter + instruction body), say what you want changed, and reference `better-stale-bot.md` as the file to update. See more in [Additional Resources](#additional-resources)
+
+## No-op run issues and the `agentic-workflows` exempt label
+
+The default exempt list includes `agentic-workflows` because Agentic Workflows can open a repository issue such as `[aw] No-Op Runs` to track `noop` runs (when the agent reports that there is nothing to do). That issue is labeled `agentic-workflows`, and without an exemption this stale bot could keep summarizing, labeling, or closing it even though Agentic Workflows created it.
+
+If you don't need `noop` runs posted as a repository issue (you can still see them in GitHub Actions run logs), turn off noop issue reporting in that workflow's YAML frontmatter, then recompile:
+
+```yaml
+safe-outputs:
+  noop:
+    report-as-issue: false
+```
+
+If no other issues in your repo still need that exemption, you can remove `agentic-workflows` from the exempt list in `## Configuration` inside `better-stale-bot.md`.
 
 ## Tips
 
