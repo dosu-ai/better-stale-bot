@@ -14,7 +14,7 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 - Respect exempt labels (`agentic-workflows`, `pinned`, `security`, `help wanted` by default)  
 - Write volume is capped by compiled `safe-outputs` (`add-comment`, `add-labels`, etc.); tune `max:` in frontmatter and `gh aw compile`
 - Comments in the issue title's language through prompting
-- Between runs, **cache-memory** stores a short run summary (`## Step 5` in the workflow); the instructions tell the agent to read it at the start of later runs to avoid blind reprocessing
+- Between runs, cache-memory stores a short run summary (`## Step 5` in the workflow); the instructions tell the agent to read it at the start of later runs to avoid blind reprocessing
 
 ## Table of contents
 
@@ -96,7 +96,7 @@ Then follow [Installation](#installation). Conceptually, most settings line up w
   - `## Configuration`: edit `days-before-stale`, `days-before-close`, and exempt labels; keep Guidelines aligned
 - **Edit with a coding agent:** tell your agent to reference https://raw.githubusercontent.com/github/gh-aw/main/create.md prompt as the base spec so the agent follows gh-aw workflows formatting and safety standards (YAML frontmatter + instruction body), say what you want changed, and reference `better-stale-bot.md` as the file to update. See more in [Additional Resources](#additional-resources)
 
-## No-op run issues and the `agentic-workflows` exempt label
+## No-op posted as an issue
 
 The default exempt list includes `agentic-workflows` because Agentic Workflows can open a repository issue such as `[aw] No-Op Runs` to track `noop` runs (when the agent reports that there is nothing to do). That issue is labeled `agentic-workflows`, and without an exemption this stale bot could keep summarizing, labeling, or closing it even though Agentic Workflows created it.
 
