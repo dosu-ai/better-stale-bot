@@ -61,11 +61,14 @@ Use the GitHub tools to fetch all open issues in this repository. Split them int
 ### Bucket A — Already-stale issues (for potential closure)
 Issues that currently have the `Stale` label. In Step 4, every decision uses `stale_label_applied_at`:
 
-- Definition: the timestamp when the `Stale` label was most recently added for the label that is on the issue now. Use labeled/timeline events from the GitHub tools (or the label association time if that is all you have). If `Stale` was removed and later re-added, use only the latest addition. Do not use the time of an old bot “marked stale” comment, the first historical stale labeling, or any timestamp that does not match the current `Stale` label.
+- How to set `stale_label_applied_at` (in order of preference):
+  1. Use the issue timeline (or equivalent API data from the GitHub tools): find the most recent `labeled` event whose label is `Stale`. Use that event’s timestamp. The actor may be a bot or a human — a maintainer may add `Stale` manually; that still counts as the label application time you must use.
+  2. If you cannot get timeline events, use any tool output that exposes when `Stale` was last added (not when an unrelated comment was posted).
+  3. Do not infer `stale_label_applied_at` from an old bot “marked stale” comment if the timeline shows a newer `labeled` event (for example after the label was removed and re-added by a person or by automation). Do not substitute the first historical stale run when a later label application exists.
 
 - Close: only if at least `days-before-close` full days have passed since `stale_label_applied_at` and there has been no qualifying non-bot activity strictly after `stale_label_applied_at`.
 
-- Remove `Stale`: if there is qualifying non-bot activity strictly after `stale_label_applied_at` (activity that predates the latest labeling does not count).
+- Remove `Stale`: if there is qualifying non-bot activity strictly after `stale_label_applied_at` (activity that predates the latest labeling does not count). Applying the `Stale` label itself (by anyone) establishes `stale_label_applied_at`; it is not “re-activation” unless there is separate non-bot activity after that timestamp.
 
 ### Bucket B — Potentially stale issues (for labeling)
 Issues WITHOUT the `Stale` label where at least `days-before-stale` full days have passed since the most recent activity (comment, edit, or label change). Exclude issues that have any exempt label defined in Configuration above.
@@ -124,7 +127,9 @@ For each issue selected for stale labeling:
 
 ## Step 4: Close Expired Stale Issues (Bucket A)
 
-For each already-stale issue for which the `days-before-close` grace period has elapsed with no non-bot activity:
+Recompute `stale_label_applied_at` for each issue using the Bucket A rules (timeline `labeled` event preferred; latest application wins).
+
+For each issue where `stale_label_applied_at` is at least `days-before-close` full days ago and there has been no qualifying non-bot activity strictly after `stale_label_applied_at`:
 - Before closing, post a brief closing comment in the same language as the issue title explaining that the stale period has expired with no qualifying activity.
 - Use `close-issue` to close it with state reason `not_planned`
 
