@@ -125,7 +125,7 @@ If no other issues in your repo still need that exemption, you can remove `agent
 
 ## Tips
 
-- **Billing** — LLM usage is charged by your chosen engine (via `COPILOT_GITHUB_TOKEN`, `ANTHROPIC_API_KEY`, or `OPENAI_API_KEY` in repo secrets). Cost scales with model, how many issues a run touches, and how much thread context is read. Numbers from quick test runs in this repo are not representative. To inspect a run: **Actions** → the workflow run → the agent job log, and expand sections such as **agentic conversation** and **token usage**. From your repo clone you can also use `gh aw logs` and `gh aw audit`.
+- **Billing** — LLM usage is charged by your chosen engine (via `COPILOT_GITHUB_TOKEN`, `ANTHROPIC_API_KEY`, or `OPENAI_API_KEY` in repo secrets). Cost scales with model, how many issues a run touches, and how much thread context is read. Numbers from quick test runs in this repo are not representative. To inspect a run: **Actions** → the workflow run → the agent summary log, and expand sections such as **agentic conversation** and **token usage**. From your repo clone you can also use `gh aw logs` and `gh aw audit`.
 
 ## Additional Resources
 
