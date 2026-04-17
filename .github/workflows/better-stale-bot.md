@@ -83,7 +83,7 @@ For each issue in Bucket B, compute these values from GitHub data (do not guess 
 
 Then compute:
 
-`engagement_score = 3 × distinct_users + 2 × total_comments_and_reactions + whole_weeks_since_last_updated`
+`engagement_score = (3 × distinct_users) + (2 × total_comments_and_reactions) + (1 × whole_weeks_since_last_updated)`
 
 Whenever you reason about ranking or priority for Bucket B, show the substituted arithmetic for that issue, for example: `engagement_score = 3 × 1 + 2 × 4 + 0 = 11` (with each term labeled as distinct_users, total_comments_and_reactions, and whole_weeks_since_last_updated). Do not report a final score unless it matches this formula. Do not approximate or drop a term.
 
