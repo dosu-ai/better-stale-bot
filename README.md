@@ -142,7 +142,7 @@ If no other issues in your repo still need that exemption, you can remove `agent
 - [CLI Commands](https://github.github.com/gh-aw/setup/cli/)
 - [Engine & Auth Setup](https://github.github.com/gh-aw/reference/engines/)
 - [Safe Outputs Reference](https://github.github.com/gh-aw/reference/safe-outputs/)
-- [Agentic Workflows authoring prompt (`create.md`, raw)](https://raw.githubusercontent.com/github/gh-aw/main/create.md) — base spec for coding agents when creating or editing workflow markdown
+- [Authoring Prompt (`create.md`, raw)](https://raw.githubusercontent.com/github/gh-aw/main/create.md) 
 
 ## License
 
