@@ -82,9 +82,9 @@ Then follow [Installation](#installation). Conceptually, most settings line up w
 - **Writes:** issue-oriented `safe-outputs` (for example `close-issue`)
 - **Instructions:** the markdown body tells the agent to list, rank, and act on issues
 
-**Pull requests:** if you want the same behavior for PRs, modify the workflow:
+**Pull requests:** if you want the same behavior for PRs, modify the workflow markdown:
 
-- Widen YAML `permissions` (for example `pull-requests`)
+- Widen YAML frontmatter `permissions` (for example `pull-requests`)
 - Grant the GitHub `tools` the agent will need for PRs
 - Add or adjust `safe-outputs` for any new write types (comments or state changes on PRs)
 - Update the markdown instructions so the agent lists, ranks, and mutates PRs instead of (or in addition to) issues
@@ -95,12 +95,18 @@ Run `gh aw compile` after frontmatter edits
 
 - Turn off the previous automation (Dosu's deployment stale bot and/or workflows like `actions/stale`) so two bots do not compete on items.
 - Follow [Installation](#installation)
-- Map old settings to this repo:
-  - Thresholds → `## Configuration` defaults for `days-before-stale` / `days-before-close`
-  - Per-run write limits → `safe-outputs` → `max:` in frontmatter, then `gh aw compile` (each output type capped separately; see [Safe Outputs](https://github.github.com/gh-aw/reference/safe-outputs/))
-  - Exempt labels → only under `## Configuration`; keep Guidelines consistent (label **names** on GitHub; Dosu may have used IDs)
-  - Shipped defaults here: **60 / 7** days vs common Dosu-style **90 / 7** — edit the Configuration table; adjust `safe-outputs` `max:` if you need different volume
-- **Codex (GPT-style models):** `engine: codex`, optional `model:`, add `OPENAI_API_KEY`, recompile — see [engines](https://github.github.com/gh-aw/reference/engines/)
+- Map old settings using the `## Configuration` section and frontmatter in `better-stale-bot.md`:
+
+| Setting | better-stale-bot (`## Configuration` defaults) | Dosu stale bot defaults |
+| --- | --- | --- |
+| `days-before-stale` | 60 | 90 |
+| `days-before-close` | 7 | 7 |
+| Per-run caps (`safe-outputs` → `max:` per output type) | 30 | 25 |
+| Exempt labels | `agentic-workflows`, `pinned`, `security`, `help wanted` | none |
+
+- Edit the Configuration table for thresholds and exempt labels; use label names as they appear on GitHub.
+- Change `max:` only in frontmatter, then run `gh aw compile`. Each output type is capped separately; see [Safe Outputs](https://github.github.com/gh-aw/reference/safe-outputs/).
+- Codex (GPT-style models): `engine: codex`, optional `model:`, add `OPENAI_API_KEY`, recompile — see [engines](https://github.github.com/gh-aw/reference/engines/)
 
 ## Customization
 
