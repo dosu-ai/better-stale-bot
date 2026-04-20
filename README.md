@@ -97,15 +97,15 @@ Run `gh aw compile` after frontmatter edits
 - Follow [Installation](#installation)
 - Map old settings using the `## Configuration` section and frontmatter in `better-stale-bot.md`:
 
-| Setting | better-stale-bot (`## Configuration` defaults) | Dosu stale bot defaults |
+| Setting | better-stale-bot defaults | Dosu stale bot defaults |
 | --- | --- | --- |
 | `days-before-stale` | 60 | 90 |
 | `days-before-close` | 7 | 7 |
 | Per-run caps (`safe-outputs` → `max:` per output type) | 30 | 25 |
 | Exempt labels | `agentic-workflows`, `pinned`, `security`, `help wanted` | none |
 
-- Edit the Configuration table for thresholds and exempt labels; use label names as they appear on GitHub.
-- Change `max:` only in frontmatter, then run `gh aw compile`. Each output type is capped separately; see [Safe Outputs](https://github.github.com/gh-aw/reference/safe-outputs/).
+  - Edit the Configuration table for thresholds and exempt labels; use label names as they appear on GitHub.
+  - Change `max:` only in frontmatter, then run `gh aw compile`. Each output type is capped separately; see [Safe Outputs](https://github.github.com/gh-aw/reference/safe-outputs/).
 - Codex (GPT-style models): `engine: codex`, optional `model:`, add `OPENAI_API_KEY`, recompile — see [engines](https://github.github.com/gh-aw/reference/engines/)
 
 ## Customization
