@@ -115,7 +115,7 @@ Run `gh aw compile` after frontmatter edits
   - **AI Engines:** e.g. `engine: copilot`; `engine: { id: claude, model: haiku }`; `engine: claude` (Sonnet); `engine: codex` (+ optional `model:`) — match the repo secret to the engine 
 - **Markdown body:** takes effect on the next run — no recompile needed unless frontmatter changed
   - `## Configuration`: edit `days-before-stale`, `days-before-close`, and exempt labels; keep Guidelines aligned
-- **Edit with a coding agent:** tell your agent to reference https://raw.githubusercontent.com/github/gh-aw/main/create.md prompt as the base spec so the agent follows gh-aw workflows formatting and safety standards (YAML frontmatter + instruction body), say what you want changed, and reference `better-stale-bot.md` as the file to update. See more in [Additional Resources](#additional-resources)
+- **Edit with a coding agent:** tell your agent to use the [authoring prompt `create.md` (raw)](https://raw.githubusercontent.com/github/gh-aw/main/create.md) as the base spec so the agent follows gh-aw formatting and safety (YAML frontmatter + instruction body), say what you want changed, and reference `better-stale-bot.md` as the file to update. See more in [Additional Resources](#additional-resources)
 
 ## No-op posted as an issue
 
@@ -142,6 +142,7 @@ If no other issues in your repo still need that exemption, you can remove `agent
 - [CLI Commands](https://github.github.com/gh-aw/setup/cli/)
 - [Engine & Auth Setup](https://github.github.com/gh-aw/reference/engines/)
 - [Safe Outputs Reference](https://github.github.com/gh-aw/reference/safe-outputs/)
+- [Agentic Workflows authoring prompt (`create.md`, raw)](https://raw.githubusercontent.com/github/gh-aw/main/create.md) — base spec for coding agents when creating or editing workflow markdown
 
 ## License
 
