@@ -54,6 +54,8 @@ The workflow you copy from this repo defaults to **Claude Haiku** in YAML frontm
 
 **Add workflow, compile, push**
 
+In a local clone of the repository where you want the bot, download the workflow markdown, run `gh aw compile` to generate the lock file, then commit and push both files to the branch GitHub Actions uses (usually your default branch, often `main`).
+
 ```bash
 mkdir -p .github/workflows
 curl -o .github/workflows/better-stale-bot.md \
