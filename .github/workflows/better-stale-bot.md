@@ -130,7 +130,7 @@ For each issue selected for stale labeling:
 Recompute `stale_label_applied_at` for each issue using the Bucket A rules (timeline `labeled` event preferred; latest application wins).
 
 For each issue where `stale_label_applied_at` is at least `days-before-close` full days ago and there has been no qualifying non-bot activity strictly after `stale_label_applied_at`:
-- Close with a single user-visible message: call `close-issue` once and put the full closing text in that call’s `body` (same language as the issue title; explain that the stale period has expired with no qualifying activity; default to no emoji unless the existing thread clearly uses them). Use state reason `not_planned`.
+- Close with a single user-visible message: call `close-issue` once and put the full closing text in that call’s `body` (same language as the issue title; explain that the stale period has expired with no qualifying activity; default to no emoji unless the existing thread clearly uses them). Always use state_reason: NOT_PLANNED. Never use COMPLETED — stale closure is not a resolution.
 - Do not also call `add-comment` for the same close—two tools would create two comments. Do not add a second generic or duplicate one-liner beyond that one `body`.
 
 For each issue where there is qualifying non-bot activity strictly after `stale_label_applied_at`:
