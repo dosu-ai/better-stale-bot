@@ -146,4 +146,4 @@ If no other issues in your repo still need that exemption, you can remove `agent
 
 ## License
 
-MIT
+Apache License 2.0 — see [LICENSE](LICENSE).
