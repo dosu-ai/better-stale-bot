@@ -2,7 +2,7 @@
 
 An AI-powered stale issue bot built with [GitHub Agentic Workflows](https://github.github.com/gh-aw/). It summarizes inactive issues, applies a `Stale` label, posts a tailored comment, closes them after a quiet period, and removes `Stale` when a **non-bot** user engages again. 
 
-Policy lives in `## Configuration` in `.github/workflows/better-stale-bot.md`: `days-before-stale` (default 60), `days-before-close` (default 7), and exempt labels. Per-run write caps are only in YAML `safe-outputs` → `max:` (frontmatter); recompile after changing them.
+Policy lives in `## Configuration` in the workflow markdown (`workflows/better-stale-bot.md` in this repository): `days-before-stale` (default 60), `days-before-close` (default 7), and exempt labels. Per-run write caps are only in YAML `safe-outputs` → `max:` (frontmatter); recompile after changing them.
 
 Unlike timer-only bots, the model reads each thread end to end and drafts issue-specific comments.
 
@@ -47,14 +47,7 @@ The two `better-stale-bot.md` files should stay in sync, when `.github/workflows
 - [GitHub CLI](https://cli.github.com/) 2.0+
 - AI account: [Copilot](https://github.com/features/copilot), [Claude](https://www.anthropic.com/), or [Codex](https://openai.com/api/)
 
-**Install `gh-aw`**
-
-```bash
-gh auth login
-gh extension install github/gh-aw
-```
-
-**Repository secret** ([engine auth](https://github.github.com/gh-aw/reference/auth/)) — repo **Settings → Secrets and variables → Actions**
+**Repository secret** ([engine auth](https://github.github.com/gh-aw/reference/auth/)) — repo **Settings → Secrets and variables → Actions** (the wizard in Option A can help set this; Option B assumes you add it yourself)
 
 | Engine  | Secret               |
 | ------- | -------------------- |
@@ -62,33 +55,47 @@ gh extension install github/gh-aw
 | Claude  | `ANTHROPIC_API_KEY`  |
 | Codex   | `OPENAI_API_KEY`     |
 
-The workflow you copy from this repo defaults to **Claude Haiku** in YAML frontmatter (`engine: id: claude, model: haiku`). Use `ANTHROPIC_API_KEY` unless you change the engine and recompile. The template also schedules a **daily** run (`on: schedule: daily`); adjust in frontmatter if you want a different frequency.
+The workflow defaults to **Claude Haiku** in YAML frontmatter (`engine: id: claude, model: haiku`). Use `ANTHROPIC_API_KEY` unless you change the engine and recompile. The template schedules a **daily** run (`on: schedule: daily`); adjust in frontmatter or during Option A setup if you want a different frequency.
 
-**Add workflow, compile, push**
+### Option A: add-wizard (recommended)
 
-In a local clone of the repository where you want the bot, download the workflow markdown, run `gh aw compile` to generate the lock file, then commit and push both files to the branch GitHub Actions uses (usually your default branch, often `main`).
+Run from a clone of the repository where you want the bot (you need write access so the wizard can open a PR if needed).
+
+```bash
+# 1. Authenticate with GitHub
+gh auth login
+
+# 2. Install the gh-aw CLI extension
+gh extension install github/gh-aw
+
+# 3. Add the workflow (checks prerequisites, prompts for the engine secret, adds the workflow, and may open a PR — merge it when ready)
+gh aw add-wizard dosu-ai/better-stale-bot/better-stale-bot
+
+# 4. Pull locally (if the wizard opened a PR you merged from the web UI)
+git pull
+```
+
+### Option B: Manual setup (alternative)
+
+In a local clone of the target repository, download the distribution markdown ([`workflows/better-stale-bot.md`](https://github.com/dosu-ai/better-stale-bot/blob/main/workflows/better-stale-bot.md) on the default branch; see [Repository layout](#repository-layout)), compile, commit, and push.
 
 ```bash
 # 1. Install gh-aw
 gh auth login
 gh extension install github/gh-aw
 
-# 2. Add your engine secret in repo Settings → Secrets → Actions
-# (ANTHROPIC_API_KEY for Claude, COPILOT_GITHUB_TOKEN for Copilot, etc.)
+# 2. Add your engine secret in repo Settings → Secrets and variables → Actions
+# ANTHROPIC_API_KEY (Claude), COPILOT_GITHUB_TOKEN (Copilot), or OPENAI_API_KEY (Codex)
 
-# 3. Add workflow with interactive setup
-gh aw add-wizard dosu-ai/better-stale-bot/better-stale-bot
-
-# 4. Commit and push
+# 3. Download, compile, and push
+mkdir -p .github/workflows
+curl -fsSL -o .github/workflows/better-stale-bot.md \
+  https://raw.githubusercontent.com/dosu-ai/better-stale-bot/main/workflows/better-stale-bot.md
+gh aw compile better-stale-bot
 git add .github/ .gitattributes
 git commit -m "Add better-stale-bot workflow"
 git push
-
-# 5. Run it
-gh aw run better-stale-bot
 ```
-
-(Install uses the distribution copy under `workflows/` on the default branch; see [Repository layout](#repository-layout).)
 
 **Run**
 
