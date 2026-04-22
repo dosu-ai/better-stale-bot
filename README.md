@@ -121,7 +121,7 @@ Run `gh aw compile` after frontmatter edits
 
 The default exempt list includes `agentic-workflows` because Agentic Workflows can open a repository issue such as `[aw] No-Op Runs` to track `noop` runs (when the agent reports that there is nothing to do). That issue is labeled `agentic-workflows`, and without an exemption this stale bot could keep summarizing, labeling, or closing it even though Agentic Workflows created it.
 
-If you don't need **better-stale-bot** to post `noop` runs as a repository issue (you can still see them in its GitHub Actions run logs), add the following under `safe-outputs` in `.github/workflows/better-stale-bot.md`, then run `gh aw compile better-stale-bot`:
+If you don't need better-stale-bot to post `noop` runs as a repository issue (you can still see them in its GitHub Actions run logs), add the following under `safe-outputs` in `.github/workflows/better-stale-bot.md`, then run `gh aw compile better-stale-bot`:
 
 ```yaml
 safe-outputs:
