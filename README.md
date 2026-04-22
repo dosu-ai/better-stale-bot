@@ -55,7 +55,7 @@ The two `better-stale-bot.md` files should stay in sync, when `.github/workflows
 | Claude  | `ANTHROPIC_API_KEY`  |
 | Codex   | `OPENAI_API_KEY`     |
 
-The workflow defaults to **Claude Haiku** in YAML frontmatter (`engine: id: claude, model: haiku`). Use `ANTHROPIC_API_KEY` unless you change the engine and recompile. The template schedules a **daily** run (`on: schedule: daily`); adjust in frontmatter or during Option A setup if you want a different frequency.
+The workflow defaults to Claude Haiku in YAML frontmatter (`engine: id: claude, model: haiku`). Use `ANTHROPIC_API_KEY` unless you change the engine and recompile. The template schedules a daily run (`on: schedule: daily`); adjust in frontmatter or during Option A setup if you want a different frequency.
 
 ### Option A: add-wizard (recommended)
 
