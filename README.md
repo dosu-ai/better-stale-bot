@@ -61,7 +61,7 @@ mkdir -p .github/workflows
 curl -o .github/workflows/better-stale-bot.md \
   https://raw.githubusercontent.com/dosu-ai/better-stale-bot/main/.github/workflows/better-stale-bot.md
 gh aw compile better-stale-bot
-git add .github/workflows/better-stale-bot.md .github/workflows/better-stale-bot.lock.yml
+git add .github/ .gitattributes 
 git commit -m "Add better-stale-bot workflow"
 git push
 ```
