@@ -18,6 +18,7 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 
 ## Table of contents
 
+- [Repository layout](#repository-layout)
 - [Installation](#installation)
 - [Migrating from GitHub's stale bot](#migrating-from-githubs-stale-bot)
 - [Migrating from Dosu's stale bot](#migrating-from-dosus-stale-bot)
@@ -26,6 +27,17 @@ Unlike timer-only bots, the model reads each thread end to end and drafts issue-
 - [Tips](#tips)
 - [Additional Resources](#additional-resources)
 - [License](#license)
+
+## Repository layout
+
+This repository keeps two copies of the Agentic Workflow markdown:
+
+| Location | Role |
+| --- | --- |
+| `workflows/` | **Distribution** — the template others copy (for example with `curl` from `raw.githubusercontent.com`). Point documentation and install snippets here. |
+| `.github/workflows/` | **Runs in this repo** — what GitHub Actions executes here, including `better-stale-bot.lock.yml` from `gh aw compile`, and what you use for testing in `dosu-ai/better-stale-bot`. |
+
+The two `better-stale-bot.md` files should stay in sync, when `.github/workflows/` is modified, the distribution copy should be updated.
 
 ## Installation
 
@@ -57,14 +69,26 @@ The workflow you copy from this repo defaults to **Claude Haiku** in YAML frontm
 In a local clone of the repository where you want the bot, download the workflow markdown, run `gh aw compile` to generate the lock file, then commit and push both files to the branch GitHub Actions uses (usually your default branch, often `main`).
 
 ```bash
-mkdir -p .github/workflows
-curl -o .github/workflows/better-stale-bot.md \
-  https://raw.githubusercontent.com/dosu-ai/better-stale-bot/main/.github/workflows/better-stale-bot.md
-gh aw compile better-stale-bot
-git add .github/ .gitattributes 
+# 1. Install gh-aw
+gh auth login
+gh extension install github/gh-aw
+
+# 2. Add your engine secret in repo Settings → Secrets → Actions
+# (ANTHROPIC_API_KEY for Claude, COPILOT_GITHUB_TOKEN for Copilot, etc.)
+
+# 3. Add workflow with interactive setup
+gh aw add-wizard dosu-ai/better-stale-bot/better-stale-bot
+
+# 4. Commit and push
+git add .github/ .gitattributes
 git commit -m "Add better-stale-bot workflow"
 git push
+
+# 5. Run it
+gh aw run better-stale-bot
 ```
+
+(Install uses the distribution copy under `workflows/` on the default branch; see [Repository layout](#repository-layout).)
 
 **Run**
 
