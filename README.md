@@ -34,8 +34,8 @@ This repository keeps two copies of the Agentic Workflow markdown:
 
 | Location | Role |
 | --- | --- |
-| `workflows/` | **Distribution** — the template others copy (for example with `curl` from `raw.githubusercontent.com`). Point documentation and install snippets here. |
-| `.github/workflows/` | **Runs in this repo** — what GitHub Actions executes here, including `better-stale-bot.lock.yml` from `gh aw compile`, and what you use for testing in `dosu-ai/better-stale-bot`. |
+| `workflows/` | **Distribution** — the template for others to copy, please install from this. |
+| `.github/workflows/` | **Runs in this repo** — where it should be for GitHub Actions, contains `better-stale-bot.lock.yml` compiled from `gh aw compile`, and used for testing. |
 
 The two `better-stale-bot.md` files should stay in sync, when `.github/workflows/` is modified, the distribution copy should be updated.
 
