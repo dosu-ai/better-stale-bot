@@ -68,10 +68,11 @@ gh auth login
 # 2. Install the gh-aw CLI extension
 gh extension install github/gh-aw
 
-# 3. Add the workflow (checks prerequisites, prompts for the engine secret, adds the workflow, and may open a PR — merge it when ready)
+# 3. Add the workflow (sets secret, adds workflow, opens a PR — may need to manually merge)
+# add a `--skip-secret` flag if you wish to set secret via GitHub UI instead
 gh aw add-wizard dosu-ai/better-stale-bot/better-stale-bot
 
-# 4. Pull locally (if the wizard opened a PR you merged from the web UI)
+# 4. Pull locally (if needed)
 git pull
 ```
 
