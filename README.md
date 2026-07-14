@@ -125,7 +125,24 @@ Run `gh aw compile` after frontmatter edits
 
 ## Migrating from Dosu's stale bot
 
-**Prefer to hand this to a coding agent?** Point it at [`dosu_migration.md`](dosu_migration.md) — an agent-ready prompt that installs the workflow, maps your existing Dosu settings, and verifies the run. To migrate by hand, follow the steps below.
+**Prefer to hand this to a coding agent?** Paste the prompt below — it follows [`dosu_migration.md`](dosu_migration.md) to install the workflow, map your Dosu settings, and verify the run. **Replace the values with your own Dosu settings** before sending (those shown are examples):
+
+```
+Migrate this repository from Dosu's hosted stale bot to better-stale-bot by following
+https://raw.githubusercontent.com/dosu-ai/better-stale-bot/main/dosu_migration.md
+
+Carry over my existing Dosu stale bot settings so behavior stays the same. My settings:
+- days_before_stale: 90
+- days_before_close: 7
+- operations_per_run: 25
+- exempt_labels: `agentic-workflows`
+
+Use the Claude engine. Install non-interactively, map my settings, then stop before
+committing so I can review — and remind me to add the ANTHROPIC_API_KEY secret and turn
+off the Dosu stale bot.
+```
+
+To migrate by hand, follow the steps below instead.
 
 - Turn off the previous automation (Dosu's deployment stale bot and/or workflows like `actions/stale`) so two bots do not compete on items.
 - Follow [Installation](#installation)
