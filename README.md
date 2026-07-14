@@ -125,6 +125,8 @@ Run `gh aw compile` after frontmatter edits
 
 ## Migrating from Dosu's stale bot
 
+**Prefer to hand this to a coding agent?** Point it at [`dosu_migration.md`](dosu_migration.md) — an agent-ready prompt that installs the workflow, maps your existing Dosu settings, and verifies the run. To migrate by hand, follow the steps below.
+
 - Turn off the previous automation (Dosu's deployment stale bot and/or workflows like `actions/stale`) so two bots do not compete on items.
 - Follow [Installation](#installation)
 - Map old settings using the `## Configuration` section and frontmatter in `better-stale-bot.md`:
