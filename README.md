@@ -125,7 +125,7 @@ Run `gh aw compile` after frontmatter edits
 
 ## Migrating from Dosu's stale bot
 
-**Prefer to hand this to a coding agent?** Paste the prompt below — it follows [`dosu_migration.md`](dosu_migration.md) to install the workflow, map your Dosu settings, and verify the run. **Replace the values with your own Dosu settings** before sending (those shown are examples):
+**Prefer to hand this to a coding agent?** Paste the prompt below — it follows [`dosu_migration.md`](dosu_migration.md) to install the workflow and map your Dosu settings. **Replace the values with your own Dosu settings** before sending (those shown are examples):
 
 ```
 Migrate this repository from Dosu's hosted stale bot to better-stale-bot by following
