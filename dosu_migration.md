@@ -1,238 +1,281 @@
-# Dosu Stale Bot → better-stale-bot Migration Guide
+# Migrate from Dosu stale bot
 
-A prompt for a coding agent (Claude Code, Copilot, Codex, or similar with shell + `gh`
-CLI access) to migrate a repository off Dosu's hosted stale bot onto
-[better-stale-bot](https://github.com/dosu-ai/better-stale-bot), the open-source AI stale
-issue bot built on [GitHub Agentic Workflows](https://github.github.com/gh-aw/).
+This guide is written for a coding agent with shell and GitHub CLI access. A person can follow the same steps.
 
-A human can also follow these steps directly.
+Dosu's hosted stale bot is scheduled for removal on August 1, 2026. Better Stale Bot runs in the customer repository through GitHub Actions.
 
----
+The migration must not change policy by accident. Stop when a setting is unknown.
 
-## Context
+## Required inputs
 
-Dosu's hosted stale bot is being removed from the Dosu app on **August 1, 2026**. The
-replacement is **better-stale-bot**: it reads each issue thread end to end, summarizes
-status, applies a `Stale` label with a tailored comment, closes issues after a grace
-period, and removes `Stale` when a non-bot user re-engages. It runs as a scheduled GitHub
-Actions workflow in the target repository — the customer owns and hosts it.
+- The target repository in `owner/repo` form
+- `days_before_stale`
+- `days_before_close`
+- `operations_per_run`
+- The exact exempt label list, including an explicit empty list when no labels are exempt
+- The AI engine
+- The owner of the engine bill and secret
 
-Your job is to install it and carry the customer's existing Dosu settings across so
-behavior does not silently change.
+Do not treat an unknown value as an empty value.
 
-## Inputs
+## Important differences
 
-Collect (or ask the user for) the following. Every field is optional — fall back to the
-Dosu default when a value is unknown.
+| Setting | Dosu | Better Stale Bot |
+| --- | --- | --- |
+| Stale delay | 90 days by default | 60 days by default |
+| Close delay | 7 days by default | 7 days by default |
+| Work limit | One combined operation cap | One cap for each write type |
+| Candidate scan | Managed by Dosu | 100 oldest eligible issues by default |
+| Exempt labels | Customer setting | Four defaults in the template |
+| Runtime | Hosted by Dosu | Customer GitHub Actions |
 
-- `repo` — target repository in `owner/repo` form
-- `dosu_config` — the user's current Dosu stale bot settings:
-  - `days_before_stale` (Dosu default: **90**)
-  - `days_before_close` (Dosu default: **7**)
-  - `operations_per_run` (Dosu default: **25**)
-  - `exempt_labels` (Dosu default: none)
-- `ai_engine` — `claude`, `copilot`, or `codex` (default: `claude`, model Haiku)
+The old combined operation cap cannot be copied exactly. A value of 25 on four new write types can allow up to 100 writes. Use `1` for every write type during the canary. Raise each cap only after the first run is reviewed.
 
-## Configuration mapping (read this before editing anything)
+Body settings take effect on the next run. Frontmatter settings require `gh aw compile`.
 
-better-stale-bot's defaults are **not** the same as Dosu's. If you install and leave the
-defaults, a customer on Dosu's 90-day policy silently drops to 60 days. Map explicitly:
+## Step 1
 
-| Setting | Dosu default | better-stale-bot default | Where it lives |
-| --- | --- | --- | --- |
-| `days-before-stale` | 90 | 60 | Markdown body → `## Configuration` |
-| `days-before-close` | 7 | 7 | Markdown body → `## Configuration` |
-| Per-run caps | 25 (one combined cap) | 30 (per output type) | YAML frontmatter → `safe-outputs` |
-| Exempt labels | none | `agentic-workflows`, `pinned`, `security`, `help wanted` | Markdown body → `## Configuration` |
-
-Two things to keep straight, because they decide whether you must recompile:
-
-- **Markdown body** (`## Configuration`: thresholds, exempt labels) is imported at
-  runtime. Edits take effect on the next scheduled run with **no recompile**.
-- **YAML frontmatter** (`safe-outputs` caps, `engine`, schedule) is compiled into the
-  `.lock.yml`. Any edit here **requires `gh aw compile`**.
-
-Note the cap model differs: Dosu used one `operations_per_run` number; better-stale-bot
-caps each output type independently (e.g. 30 comments *and* 30 label adds *and* 30 closes
-per run). When mapping `operations_per_run`, set each relevant `max:` to that value.
-
----
-
-## Migration steps
-
-### Step 1 — Validate prerequisites
+Check the local and remote state.
 
 ```bash
-gh auth status                       # must be authenticated with write access to `repo`
-gh extension install github/gh-aw    # no-op if already installed
-gh extension upgrade github/gh-aw    # ensure it's current
-gh repo view {repo}                  # confirms the repo exists and is reachable
+gh auth status
+gh extension install github/gh-aw
+gh extension upgrade github/gh-aw
+gh repo view OWNER/REPOSITORY
+git status --short
 ```
 
-Also confirm GitHub Actions is enabled for the repo (Settings → Actions → General). If
-it's disabled the workflow will never run.
+Confirm that GitHub Actions is enabled.
 
-### Step 2 — Install better-stale-bot
+Inventory the current stale state before installing anything.
 
-From a local clone of the target repo, use the **non-interactive** command (best for an
-autonomous agent — it downloads the distribution markdown and compiles the lock file
-without prompting):
+```bash
+gh issue list --repo OWNER/REPOSITORY \
+  --state open \
+  --label Stale \
+  --limit 1000
+```
+
+Record any issue that could close on the first run.
+
+## Step 2
+
+Install the workflow without prompts.
 
 ```bash
 gh aw add dosu-ai/better-stale-bot/better-stale-bot
 ```
 
-This creates:
-- `.github/workflows/better-stale-bot.md` — editable source (frontmatter + instructions)
-- `.github/workflows/better-stale-bot.lock.yml` — the compiled workflow that actually runs
-- `.gitattributes` — marks the `.lock.yml` as generated
+The command adds the editable Markdown source and compiled lock file. A first time `gh-aw` setup can also add the files below.
 
-> **Human alternative:** `gh aw add-wizard dosu-ai/better-stale-bot/better-stale-bot`
-> is interactive — it prompts for the engine secret and can open a PR. Do **not** use the
-> wizard from an unattended agent; it will hang waiting for input. Use `gh aw add` above.
+- `.github/agents/agentic-workflows.md`
+- `.github/skills/agentic-workflows/SKILL.md`
+- `.github/mcp.json`
+- `.github/workflows/copilot-setup-steps.yml`
+- `.gitattributes`
 
-### Step 3 — Map Dosu configuration
+Review every generated file.
 
-Open `.github/workflows/better-stale-bot.md`.
+## Step 3
 
-**A. Thresholds and exempt labels — markdown body, `## Configuration`:**
+Set the workflow to manual-only mode for the canary.
 
-- Set `days-before-stale` default to `{dosu_config.days_before_stale}` (preserves the
-  customer's 90-day policy instead of dropping to 60).
-- Set `days-before-close` default to `{dosu_config.days_before_close}`.
-- **Exempt labels — replicate Dosu, but always include `agentic-workflows`:**
-  - If the user supplied `exempt_labels`: set the exempt list to **exactly those labels
-    plus `agentic-workflows`**. Do not carry over the other better-stale-bot defaults
-    (`pinned`, `security`, `help wanted`) — the customer didn't have them under Dosu.
-  - If the user supplied **no** exempt labels: keep all four better-stale-bot defaults
-    (`agentic-workflows`, `pinned`, `security`, `help wanted`).
-  - Use label names exactly as they appear on GitHub.
-- **Why `agentic-workflows` is non-negotiable:** GitHub Agentic Workflows opens a
-  repository issue (`[aw] No-Op Runs`) labeled `agentic-workflows` to track `noop` runs.
-  If it isn't exempt, the bot will summarize, label, and eventually close its own no-op
-  issue. Only drop it if you also disable no-op-as-issue by adding `report-as-issue: false`
-  under `safe-outputs.noop` in the frontmatter (then recompile) — see the repo's
-  "No-op posted as an issue" section.
+```yaml
+on: workflow_dispatch
+```
 
-**B. Per-run caps — YAML frontmatter, `safe-outputs`:**
+Keep the default detailed scan limit at 100 unless the repository needs a smaller canary.
 
-Only edit if `operations_per_run` differs from 30. Set each output type's `max:` to the
-mapped value. The correct key is `allowed:` (not `allowed-labels:` — that key does not
-exist and will fail compilation):
+```markdown
+| `candidate-scan-limit` | Maximum Bucket B issues to inspect in detail per run after the oldest eligible issues are selected | 100 |
+```
+
+Map the stale and close delays in `## Configuration`.
+
+Use the exact exempt label list supplied by the customer.
+
+If the list is empty, disable the no-op issue before removing `agentic-workflows`.
+
+```yaml
+safe-outputs:
+  noop:
+    report-as-issue: false
+```
+
+Do not keep `pinned`, `security`, or `help wanted` unless the customer chooses them.
+
+## Step 4
+
+Use one write per type for the canary.
 
 ```yaml
 safe-outputs:
   add-comment:
-    max: {operations_per_run}
+    max: 1
+    target: "*"
+    issues: true
+    pull-requests: false
+    discussions: false
   add-labels:
-    max: {operations_per_run}
+    max: 1
+    target: "*"
     allowed: ["Stale"]
   remove-labels:
-    max: {operations_per_run}
+    max: 1
+    target: "*"
     allowed: ["Stale"]
   close-issue:
-    max: {operations_per_run}
+    max: 1
+    target: "*"
   noop:
 ```
 
-**C. Engine — YAML frontmatter, `engine:` (only if `ai_engine` is not `claude`):**
+If no-op issue reporting is disabled, keep `report-as-issue: false` under `noop`.
+
+## Step 5
+
+Set the engine with current syntax.
+
+Claude Haiku
 
 ```yaml
-# Claude (default) — Haiku:
-engine:
-  id: claude
-  model: haiku
+engine: claude
+model: haiku
+```
 
-# Copilot:
+Copilot
+
+```yaml
 engine: copilot
+```
 
-# Codex:
+Codex
+
+```yaml
 engine: codex
 ```
 
-### Step 4 — Recompile (only if you touched frontmatter)
+Copilot organization billing also needs the permission below.
 
-If you changed **anything in the YAML frontmatter** in Step 3 (caps or engine), recompile:
+```yaml
+permissions:
+  contents: read
+  issues: read
+  copilot-requests: write
+```
+
+## Step 6
+
+Make sure the `Stale` label exists.
+
+```bash
+gh label create Stale \
+  --repo OWNER/REPOSITORY \
+  --color BFD4F2 \
+  --description "Inactive issue awaiting confirmation" \
+  --force
+```
+
+Compile and validate.
 
 ```bash
 gh aw compile better-stale-bot
+gh aw validate better-stale-bot --strict
+gh aw secrets bootstrap \
+  --repo OWNER/REPOSITORY \
+  --non-interactive
 ```
 
-If you changed **only** the markdown body (thresholds, exempt labels), skip this — the
-existing `.lock.yml` imports the body at runtime.
+Review `.github/workflows/better-stale-bot.lock.yml`. Confirm the engine, schedule, permissions, write caps, and required secret.
 
-### Step 5 — Configure the engine secret
+## Step 7
 
-The secret cannot be set by the agent's own credentials — it must be the customer's key.
-Add it in the repo (Settings → Secrets and variables → Actions → New repository secret):
+Configure engine authentication.
 
-| Engine | Required secret |
+| Engine | Authentication |
 | --- | --- |
-| `claude` | `ANTHROPIC_API_KEY` |
-| `copilot` | `COPILOT_GITHUB_TOKEN` |
-| `codex` | `OPENAI_API_KEY` |
+| Claude | `ANTHROPIC_API_KEY` |
+| Codex | `OPENAI_API_KEY` |
+| Copilot | Organization billing or `COPILOT_GITHUB_TOKEN` |
 
-You may run `gh secret set {SECRET_NAME} --repo {repo}` to set it interactively, but **do
-not paste, echo, or hardcode the key value** — let the user supply it at the prompt or via
-the GitHub UI.
+Never echo or hardcode a secret. Let the customer enter it through GitHub or an interactive `gh aw secrets set` prompt.
 
-### Step 6 — Commit and push
+## Step 8
+
+Pause Dosu's hosted stale bot before the new workflow can run.
+
+Do not leave both systems active.
+
+Commit the manual-only canary on a branch and open a pull request.
 
 ```bash
 git add .github/ .gitattributes
-git commit -m "chore: migrate from Dosu stale bot to better-stale-bot"
+git commit -m "chore: migrate stale issue automation"
 git push
 ```
 
-Prefer a branch + PR if the repo protects `main`. Do not commit unrelated untracked files.
+Merge after reviewing the generated lock file.
 
-### Step 7 — Verify
+## Step 9
 
-`gh aw compile` adds a `workflow_dispatch` trigger to the lock file, so you can trigger a
-manual run immediately (no need to wait for the daily schedule):
+Run one manual canary.
 
 ```bash
-gh aw run better-stale-bot                    # manual dispatch
-gh run list --workflow=better-stale-bot.lock.yml --limit=1   # check status
+gh aw run better-stale-bot --repo OWNER/REPOSITORY
+gh run list \
+  --repo OWNER/REPOSITORY \
+  --workflow better-stale-bot.lock.yml \
+  --limit 1
 ```
 
-Confirm the run succeeds in the **Actions** tab. After this the bot runs daily on schedule
-with no further action. If a run fails, inspect it with `gh aw logs` / `gh aw audit` and
-recheck the secret.
+Inspect the run with a real run ID.
 
-### Step 8 — Turn off the Dosu stale bot
+```bash
+gh aw logs better-stale-bot --repo OWNER/REPOSITORY
+gh aw audit RUN_ID --repo OWNER/REPOSITORY
+gh aw outcomes RUN_ID --repo OWNER/REPOSITORY
+```
 
-Tell the user to disable Dosu's hosted stale bot in their Dosu app settings so the two
-bots don't act on the same issues. It will be removed automatically on August 1, 2026
-regardless, but disabling it now avoids double-processing during the overlap.
+Check the issue comment, label, close reason, language, and duplicate behavior.
 
----
+## Step 10
 
-## Error handling
+Enable the production schedule only after approval.
 
-- `gh aw` command fails → `gh extension upgrade github/gh-aw`, then retry.
-- Compile fails → validate YAML frontmatter syntax; the most common mistake is using
-  `allowed-labels:` instead of `allowed:`, or bad indentation under `safe-outputs`.
-- Run fails immediately → the engine secret is usually missing or misnamed; confirm it
-  matches the table in Step 5 for the selected engine.
-- No `workflow_dispatch` option in the Actions tab → the `.lock.yml` wasn't committed, or
-  compile didn't run; re-check Steps 4 and 6.
+```yaml
+on:
+  schedule: daily
+```
 
-## Notes
+Choose each write cap separately. Do not reuse the old combined cap without review.
 
-- Config in the **markdown body** takes effect on the next run with no recompile; **YAML
-  frontmatter** changes require `gh aw compile`.
-- Caps are per output type, not one combined counter like Dosu's `operations_per_run`.
-- Between runs the bot writes a short summary to cache-memory and reads it next run to
-  avoid reprocessing the same issues.
-- Comments are generated in the language of the issue title.
-- The shipped workflow targets **issues only**, not pull requests.
+Recompile, validate, and merge the production change.
 
-## Output — summarize when done
+```bash
+gh aw compile better-stale-bot
+gh aw validate better-stale-bot --strict
+```
 
-1. Repository migrated
-2. Config applied — `days-before-stale`, `days-before-close`, per-run caps, exempt labels
-   (call out any delta from the customer's old Dosu values)
-3. Engine selected
-4. Whether the manual verification run succeeded
-5. Remaining manual steps for the user (add API key secret, disable Dosu stale bot)
+## Failure rules
+
+- Missing timeline data means no close.
+- Missing reaction actor data means no computed engagement score.
+- Missing engine authentication means no live run.
+- A threat detection failure means no writes should be trusted as applied.
+- Cache state is advisory. Current GitHub state wins.
+- A missing or uncertain customer setting stops the migration.
+
+## Completion report
+
+Report the items below when the work is done.
+
+1. The repository and pull request
+2. The old and new stale delays
+3. The old and new close delays
+4. The candidate scan limit
+5. The canary caps
+6. The production caps
+7. The exempt label list
+8. The selected engine and auth owner
+9. The canary run ID and outcome
+10. Confirmation that Dosu's old bot is paused

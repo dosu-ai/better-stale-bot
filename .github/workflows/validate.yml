@@ -1,0 +1,43 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workflow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install the tested gh-aw release
+        run: gh extension install github/gh-aw --pin v0.83.4
+
+      - name: Check the source copies
+        run: diff -u workflows/better-stale-bot.md .github/workflows/better-stale-bot.md
+
+      - name: Validate the repository workflow
+        run: gh aw validate better-stale-bot --strict
+
+      - name: Validate the distribution workflow
+        run: gh aw validate --dir workflows --strict
+
+      - name: Compile the generated workflow
+        run: gh aw compile better-stale-bot --strict
+
+      - name: Check generated files
+        run: git diff --exit-code -- .github/workflows/better-stale-bot.lock.yml .github/aw/actions-lock.json
